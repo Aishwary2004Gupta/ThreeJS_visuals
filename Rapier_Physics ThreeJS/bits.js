@@ -40,8 +40,8 @@ import RAPIER from 'https://cdn.skypack.dev/@dimforge/rapier3d-compat@0.11.2';
 await RAPIER.init();
 let gravity = { x: 0.0, y: 0, z: 0.0 };
 let world = new RAPIER.World(gravity);
-// render 
 world.step();
+
 /*
     1) basic scene
     2) populate with geometry
