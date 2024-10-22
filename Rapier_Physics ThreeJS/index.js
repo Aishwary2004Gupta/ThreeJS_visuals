@@ -8,7 +8,6 @@ import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
 
-
 const w = window.innerWidth;
 const h = window.innerHeight;
 const scene = new THREE.Scene();
