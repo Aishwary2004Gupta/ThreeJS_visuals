@@ -51,5 +51,4 @@ for (let p = 0; p < len; p += 3) {
 }
 
 const spline = new THREE.CatmullRomCurve3(points); //for moving through points 
-
 export default spline;
