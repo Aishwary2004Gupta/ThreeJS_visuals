@@ -36,7 +36,6 @@ function init() {
         needsAnimatedColor: true, //for solid non-wireframe 
         // clearColor: 0xEFEFEF
     });
-
     transition = getTransition({ renderer, sceneA, sceneB });
 }
 
