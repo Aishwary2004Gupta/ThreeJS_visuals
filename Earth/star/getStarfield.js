@@ -30,6 +30,7 @@ for (let i = 0; i < numStars; i += 1) {
     verts.push(pos.x, pos.y, pos.z);
     colors.push(col.r, col.g, col.b);
 }
+    
 const geo = new THREE.BufferGeometry();
 geo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
 geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
