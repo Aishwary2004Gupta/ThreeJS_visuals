@@ -17,7 +17,7 @@ function randomSpherePoint() {
         minDist: radius,
     };
 }
-    
+
 const verts = [];
 const colors = [];
 const positions = [];
