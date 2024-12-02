@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "three"; 
 // import { OrbitControls } from "jsm/controls/OrbitControls.js";
 import spline from "./spline.js";
 import getStarfield from "./star/getStarfield.js";
