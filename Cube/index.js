@@ -19,6 +19,8 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
 
+
+
 //add wireframe
 // const wireMat = new THREE.MeshDepthMaterial({
 //     color: 0xffffff,
