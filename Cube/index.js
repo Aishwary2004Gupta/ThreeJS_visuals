@@ -24,7 +24,6 @@ const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2
 const lineSegments = new THREE.LineSegments(edges, lineMaterial);
 cube.add(lineSegments);
 
-
 //add wireframe
 // const wireMat = new THREE.MeshDepthMaterial({
 //     color: 0xffffff,
