@@ -22,7 +22,7 @@ scene.add(cube);
 const edges = new THREE.EdgesGeometry(geometry);
 const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
 const lineSegments = new THREE.LineSegments(edges, lineMaterial);
-
+cube.add(lineSegments);
 
 
 //add wireframe
