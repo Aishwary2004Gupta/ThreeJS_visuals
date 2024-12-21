@@ -19,7 +19,7 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
 // Create edges geometry and material for glowing effect
-
+const edges = new THREE.EdgesGeometry(geometry);
 
 
 //add wireframe
