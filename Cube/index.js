@@ -20,6 +20,8 @@ scene.add(cube);
 
 // Create edges geometry and material for glowing effect
 const edges = new THREE.EdgesGeometry(geometry);
+const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 });
+
 
 
 //add wireframe
