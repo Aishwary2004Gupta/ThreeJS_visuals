@@ -52,8 +52,8 @@ scene.add(hemiLight);
 function animate() {
     requestAnimationFrame(animate);
     // mesh.scale.setScalar(Math.cos(t * 0.001) + 0.1); 
-    // mesh.rotation.x += 0.001;
-    // mesh.rotation.y += 0.001;
+    mesh.rotation.x += 0.001;
+    mesh.rotation.y += 0.001;
     renderer.render(scene, camera);
     controls.update();
 }
