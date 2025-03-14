@@ -56,7 +56,7 @@ pointLight.position.set(10, 10, 10);
 scene.add(pointLight);
 
 // Camera Position
-camera.position.z = 5;
+camera.position.z = 10;
 
 // Animation Loop
 let time = 0;
