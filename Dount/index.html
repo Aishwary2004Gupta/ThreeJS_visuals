@@ -13,6 +13,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/controls/OrbitControls.js"></script>
   <script>
+    console.log("Script is running"); // Debugging log
+
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000000); // Deep black background
@@ -21,6 +23,7 @@
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
+    console.log("Renderer appended to document"); // Debugging log
 
     // Add Stars Background
     const starGeometry = new THREE.BufferGeometry();
@@ -72,6 +75,7 @@
 
     // Camera Position
     camera.position.z = 15; // Adjusted to ensure the torus is visible
+    console.log("Camera position set"); // Debugging log
 
     // Animation Loop
     function animate() {
@@ -100,6 +104,7 @@
 
     // Start Animation
     animate();
+    console.log("Animation started"); // Debugging log
   </script>
 </body>
 </html>
