@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wormhole Visual with Three.js</title>
+  <title>Metallic Torus with Starry Background</title>
   <style>
     body { margin: 0; }
     canvas { display: block; }
@@ -11,7 +11,86 @@
 </head>
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
-  <script src="script.js"></script>
+  <script>
+    // Scene, Camera, Renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Add Stars Background
+    const starGeometry = new THREE.BufferGeometry();
+    const starVertices = [];
+    for (let i = 0; i < 5000; i++) {
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 1000;
+      const z = (Math.random() - 0.5) * 1000;
+      starVertices.push(x, y, z);
+    }
+    starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+
+    // Create the Metallic Torus
+    const torusGeometry = new THREE.TorusGeometry(3, 1, 32, 100);
+    const torusMaterial = new THREE.MeshStandardMaterial({
+      color: 0x6a0dad, // Vibrant purple
+      metalness: 1.0, // Fully metallic
+      roughness: 0.1, // Smooth and glossy
+    });
+    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+    torus.position.set(0, 0, 0); // Ensure torus is centered
+    scene.add(torus);
+
+    // Add Gray Sphere Inside the Torus
+    const sphereGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+    const sphereMaterial = new THREE.MeshStandardMaterial({
+      color: 0x808080, // Gray
+      metalness: 0.5,
+      roughness: 0.5,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(0, 0, 0); // Ensure sphere is centered inside the torus
+    scene.add(sphere);
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+    pointLight.position.set(10, 10, 10);
+    scene.add(pointLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
+
+    // Camera Position
+    camera.position.z = 15; // Adjusted to ensure the torus is visible
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rotate Torus
+      torus.rotation.x += 0.01;
+      torus.rotation.y += 0.01;
+
+      // Render Scene
+      renderer.render(scene, camera);
+    }
+
+    // Handle Window Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Start Animation
+    animate();
+  </script>
 </body>
 </html>
