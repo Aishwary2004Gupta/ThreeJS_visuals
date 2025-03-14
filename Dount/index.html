@@ -11,9 +11,12 @@
 </head>
 <body>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/controls/OrbitControls.js"></script>
   <script>
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // Deep black background
+
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -88,6 +91,12 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+
+    // Add User Interaction
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Enable damping (inertia)
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
 
     // Start Animation
     animate();
