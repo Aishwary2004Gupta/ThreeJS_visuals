@@ -10,20 +10,22 @@
   </style>
 </head>
 <body>
+  <!-- Load Three.js from a CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/examples/js/controls/OrbitControls.js"></script>
   <script>
-    console.log("Script is running"); // Debugging log
+    // Ensure Three.js is loaded before running the script
+    if (THREE) {
+      console.log("Three.js is loaded successfully!");
+    } else {
+      console.error("Three.js failed to load!");
+    }
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000); // Deep black background
-
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    console.log("Renderer appended to document"); // Debugging log
 
     // Add Stars Background
     const starGeometry = new THREE.BufferGeometry();
@@ -47,7 +49,6 @@
       roughness: 0.1, // Smooth and glossy
     });
     const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus.position.set(0, 0, 0); // Ensure torus is centered
     scene.add(torus);
 
     // Add Gray Sphere Inside the Torus
@@ -58,7 +59,6 @@
       roughness: 0.5,
     });
     const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.set(0, 0, 0); // Ensure sphere is centered inside the torus
     scene.add(sphere);
 
     // Lighting
@@ -75,7 +75,6 @@
 
     // Camera Position
     camera.position.z = 15; // Adjusted to ensure the torus is visible
-    console.log("Camera position set"); // Debugging log
 
     // Animation Loop
     function animate() {
@@ -96,15 +95,8 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Add User Interaction
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // Enable damping (inertia)
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
-
     // Start Animation
     animate();
-    console.log("Animation started"); // Debugging log
   </script>
 </body>
 </html>
