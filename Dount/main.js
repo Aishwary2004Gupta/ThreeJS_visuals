@@ -39,7 +39,7 @@ window.addEventListener('load', () => {
       color: 0x6a0dad, // Purple
       emissive: 0x4b0082, // Dark purple glow
       emissiveIntensity: 0.5,
-      metalness: 0.8,
+      metalness: 2,
       roughness: 0.2,
     });
     const torus = new THREE.Mesh(torusGeometry, torusMaterial);
@@ -86,11 +86,11 @@ window.addEventListener('load', () => {
     scene.add(ambientLight);
 
     const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-    pointLight.position.set(10, 10, 10);
+    pointLight.position.set(5, 5, 5);
     scene.add(pointLight);
 
     // Camera Position
-    camera.position.z = 10;
+    camera.position.z = 5;
 
     console.log('Starting animation loop...');
     // Animation Loop
