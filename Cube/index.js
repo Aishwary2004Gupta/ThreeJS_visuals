@@ -10,7 +10,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.RoundedBoxGeometry(1.5, 1.5, 1.5, 4, 0.1);
+const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5, 4, 4, 4);
 const material = new THREE.MeshStandardMaterial({ 
     color: 0x4285F4,
     metalness: 1.0,
@@ -35,7 +35,6 @@ cube.add(lineSegments);
 // const wireMesh = new THREE.Mesh(geometry, wireMat);
 // wireMesh.scale.setScalar(1); //scalling up a bit
 // cube.add(wireMesh); //to make the wires also move use cube instead of scene 
-
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; //make the cube move (smooth)
