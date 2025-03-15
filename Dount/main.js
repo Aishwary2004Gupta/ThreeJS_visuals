@@ -101,7 +101,7 @@ window.addEventListener('load', () => {
       requestAnimationFrame(animate);
 
       // Update Time
-      time += 0.01 * speed;
+      time += 0.06 * speed;
 
       // Rotate Torus
       torus.rotation.x = time * 0.3;
