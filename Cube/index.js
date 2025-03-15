@@ -10,11 +10,11 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5, 4, 4, 4);
+const geometry = new THREE.RoundedBoxGeometry(1.5, 1.5, 1.5, 4, 0.1);
 const material = new THREE.MeshStandardMaterial({ 
     color: 0x4285F4,
-    // metalness: 1.0,
-    roughness: 0.2,
+    metalness: 1.0,
+    roughness: 0.1,
     flatShading: false
 });
 const cube = new THREE.Mesh(geometry, material);
