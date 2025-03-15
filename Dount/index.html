@@ -14,6 +14,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
   <script>
     window.addEventListener('load', () => {
+      if (typeof THREE === 'undefined') {
+        console.error('Three.js library is not loaded.');
+        return;
+      }
       try {
         console.log('Initializing scene...');
         // Scene, Camera, Renderer
