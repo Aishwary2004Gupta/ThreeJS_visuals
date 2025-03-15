@@ -10,10 +10,18 @@
   </style>
 </head>
 <body>
-  <!-- Load Three.js as an ES Module -->
+  <!-- Importmap for Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.161/build/three.module.js",
+        "jsm/": "https://cdn.jsdelivr.net/npm/three@0.161/examples/jsm/"
+      }
+    }
+  </script>
   <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.0/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from 'three';
+    import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
     window.addEventListener('load', () => {
       try {
