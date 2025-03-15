@@ -12,6 +12,8 @@
 <body>
   <!-- Load Three.js from a CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
+  <!-- Load OrbitControls from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
   <script>
     // Ensure Three.js is loaded before running the script
     if (THREE) {
@@ -76,6 +78,11 @@
     // Camera Position
     camera.position.z = 15; // Adjusted to ensure the torus is visible
 
+    // Add OrbitControls for User Interaction
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // Smooth camera movement
+    controls.dampingFactor = 0.05;
+
     // Animation Loop
     function animate() {
       requestAnimationFrame(animate);
@@ -83,6 +90,9 @@
       // Rotate Torus
       torus.rotation.x += 0.01;
       torus.rotation.y += 0.01;
+
+      // Update OrbitControls
+      controls.update();
 
       // Render Scene
       renderer.render(scene, camera);
