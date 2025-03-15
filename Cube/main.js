@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
+import { RoundedBoxGeometry } from 'jsm/geometries/RoundedBoxGeometry.js';
 
 window.addEventListener('load', () => {
   try {
@@ -17,15 +18,14 @@ window.addEventListener('load', () => {
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
 
-    console.log('Creating the cube...');
-    // Create the Cube
-    const cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    console.log('Creating the rounded cube...');
+    // Create the Rounded Cube
+    const cubeGeometry = new RoundedBoxGeometry(1.5, 1.5, 1.5, 6, 0.1); // Rounded edges
     const cubeMaterial = new THREE.MeshStandardMaterial({
-      color: 0x4285f4, // Blue
-      metalness: 0.6,
-      roughness: 0.2,
-      smoothness: 4,
-      wireframe: false, // Set to true for wireframe mode
+      color: 0x0047ab, // Deep blue
+      metalness: 0.9, // High reflectivity
+      roughness: 0.1, // Smooth and glossy
+      envMapIntensity: 1.5, // Enhance reflections
     });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     scene.add(cube);
@@ -38,6 +38,10 @@ window.addEventListener('load', () => {
     const pointLight = new THREE.PointLight(0xffffff, 1, 100);
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(5, 5, 5);
+    scene.add(directionalLight);
 
     // Camera Position
     camera.position.z = 5;
