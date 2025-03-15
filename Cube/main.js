@@ -23,9 +23,10 @@ window.addEventListener('load', () => {
     const cubeGeometry = new RoundedBoxGeometry(1.5, 1.5, 1.5, 6, 0.1); // Rounded edges
     const cubeMaterial = new THREE.MeshStandardMaterial({
       color: 0x0047ab, // Deep blue
-      metalness: 0.9, // High reflectivity
-      roughness: 0.1, // Smooth and glossy
-      envMapIntensity: 1.5, // Enhance reflections
+      metalness: 0.6, // High reflectivity
+      roughness: 0.2, // Smooth and glossy
+      envMapIntensity: 1, // Enhance reflections
+      smoothness: 4 // Smooth shading
     });
     const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
     scene.add(cube);
@@ -39,12 +40,12 @@ window.addEventListener('load', () => {
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
 
     // Camera Position
-    camera.position.z = 5;
+    camera.position.z = 3.5;
 
     console.log('Starting animation loop...');
     // Animation Loop
