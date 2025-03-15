@@ -88,6 +88,16 @@ function createCubie(x, y, z) {
   return cubieGroup;
 }
 
+// Rotate a layer of the Rubik's Cube
+function rotateLayer(cubeGroup, axis, index, angle) {
+  cubeGroup.children.forEach((cubie) => {
+    const position = cubie.position[axis];
+    if (Math.round(position) === index) {
+      cubie.rotation[axis] += angle;
+    }
+  });
+}
+
 // Initialize the scene
 function initScene() {
   const scene = new THREE.Scene();
@@ -117,8 +127,18 @@ function initScene() {
   controls.dampingFactor = 0.05;
 
   // Animation loop
+  let time = 0;
+  const speed = 0.01;
+
   function animate() {
     requestAnimationFrame(animate);
+
+    // Rotate layers automatically
+    time += speed;
+    rotateLayer(rubiksCube, 'x', 0, speed); // Rotate top layer
+    rotateLayer(rubiksCube, 'y', 1, speed); // Rotate middle layer
+    rotateLayer(rubiksCube, 'z', -1, speed); // Rotate front layer
+
     controls.update();
     renderer.render(scene, camera);
   }
