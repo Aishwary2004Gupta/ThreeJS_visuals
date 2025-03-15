@@ -10,14 +10,11 @@
   </style>
 </head>
 <body>
-  <!-- Load Three.js from a CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.min.js"></script>
-  <script>
+  <!-- Load Three.js as an ES Module -->
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.0/build/three.module.js';
+
     window.addEventListener('load', () => {
-      if (typeof THREE === 'undefined') {
-        console.error('Three.js library is not loaded.');
-        return;
-      }
       try {
         console.log('Initializing scene...');
         // Scene, Camera, Renderer
