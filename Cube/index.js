@@ -13,10 +13,9 @@ document.body.appendChild(renderer.domElement);
 const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5, 4, 4, 4);
 const material = new THREE.MeshStandardMaterial({ 
     color: 0x4285F4,
-    flatShading: true,
-    metalness: 0.6,
+    // metalness: 1.0,
     roughness: 0.2,
-    envMapIntensity: 1
+    flatShading: false
 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
