@@ -10,7 +10,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5, 4, 4, 4);
 const material = new THREE.MeshStandardMaterial({ 
     color: 0x4285F4,
     flatShading: true,
