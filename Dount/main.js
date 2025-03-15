@@ -38,9 +38,9 @@ window.addEventListener('load', () => {
     const torusMaterial = new THREE.MeshStandardMaterial({
       color: 0x6a0dad, // Purple
       emissive: 0x4b0082, // Dark purple glow
-      emissiveIntensity: 0.5,
-      metalness: 0.8,
-      roughness: 0.2,
+      emissiveIntensity: 1,
+      metalness: 3.5,
+      roughness: 0.01,
     });
     const torus = new THREE.Mesh(torusGeometry, torusMaterial);
     scene.add(torus);
