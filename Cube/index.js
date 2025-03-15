@@ -10,10 +10,13 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry();
+const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
 const material = new THREE.MeshStandardMaterial({ 
     color: 0x4285F4,
-    flatShading: true 
+    flatShading: true,
+    metalness: 0.6,
+    roughness: 0.2,
+    envMapIntensity: 1
 });
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
