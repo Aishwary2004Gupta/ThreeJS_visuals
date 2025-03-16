@@ -90,25 +90,21 @@ function createCubie(x, y, z) {
 
 // Rotate a layer of the Rubik's Cube
 function rotateLayer(cubeGroup, axis, index, angle) {
-  const layerGroup = new THREE.Group();
-  const remainingGroup = new THREE.Group();
-
-  cubeGroup.children.forEach((cubie) => {
+  const layer = cubeGroup.children.filter((cubie) => {
     const position = Math.round(cubie.position[axis]);
-    if (position === index) {
-      layerGroup.add(cubie);
-    } else {
-      remainingGroup.add(cubie);
-    }
+    return position === index;
   });
 
   const rotationAxis = new THREE.Vector3();
   rotationAxis[axis] = 1;
 
-  layerGroup.rotateOnAxis(rotationAxis, angle);
+  const quaternion = new THREE.Quaternion();
+  quaternion.setFromAxisAngle(rotationAxis, angle);
 
-  remainingGroup.children.forEach((cubie) => cubeGroup.add(cubie));
-  cubeGroup.add(layerGroup);
+  layer.forEach((cubie) => {
+    cubie.applyQuaternion(quaternion);
+    cubie.position.applyQuaternion(quaternion);
+  });
 }
 
 // Initialize the scene
