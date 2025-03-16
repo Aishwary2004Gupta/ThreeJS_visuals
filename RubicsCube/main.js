@@ -118,6 +118,10 @@ function initScene() {
   const rubiksCube = createRubiksCube();
   scene.add(rubiksCube);
 
+  // Tilt the cube slightly to show three faces
+  rubiksCube.rotation.x = Math.PI / 6; // Tilt forward
+  rubiksCube.rotation.y = Math.PI / 4; // Rotate to show three faces
+
   // Camera position
   camera.position.z = 5;
 
