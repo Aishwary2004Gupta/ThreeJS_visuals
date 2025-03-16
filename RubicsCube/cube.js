@@ -2,14 +2,14 @@ class Cube3D {
     constructor() {
       this.canvas = null;
       this.ctx = null;
-      this.size = 3;
+      this.size = 3; // Default cube size (3x3x3)
       this.sides = {
         red: "rrrrrrrrr",
         orange: "ooooooooo",
         blue: "bbbbbbbbb",
         green: "ggggggggg",
         white: "wwwwwwwww",
-        yellow: "yyyyyyyyy"
+        yellow: "yyyyyyyyy",
       };
       this.colors = {
         o: "orange",
@@ -17,7 +17,7 @@ class Cube3D {
         w: "white",
         b: "blue",
         g: "green",
-        y: "yellow"
+        y: "yellow",
       };
       this.Pi180 = Math.PI / 180;
       this.FRONT = 0;
@@ -54,58 +54,50 @@ class Cube3D {
         this.size = sz;
       }
   
-      this.sides["red"] = "rrrrrrrrr";
-      this.sides["orange"] = "ooooooooo";
-      this.sides["blue"] = "bbbbbbbbb";
-      this.sides["green"] = "ggggggggg";
-      this.sides["white"] = "wwwwwwwww";
-      this.sides["yellow"] = "yyyyyyyyy";
-  
+      // Precompute sin and cos values for rotation
       for (let i = 0; i < 360; i++) {
         this.tsin[i] = Math.sin(i * this.Pi180);
         this.tcos[i] = Math.cos(i * this.Pi180);
       }
   
-      this.rot_cubies = [];
+      // Initialize rotation positions
       this.rotSidePos = {
-        F: { pos: [], axis: this.R_Z },
-        B: { pos: [], axis: this.R_Z },
-        R: { pos: [], axis: this.R_X },
-        L: { pos: [], axis: this.R_X },
-        U: { pos: [], axis: this.R_Y },
-        D: { pos: [], axis: this.R_Y },
-        S: { pos: [], axis: this.R_Z },
-        E: { pos: [], axis: this.R_X },
-        M: { pos: [], axis: this.R_Y }
+        F: { pos: [], axis: this.R_Z }, // Front
+        B: { pos: [], axis: this.R_Z }, // Back
+        R: { pos: [], axis: this.R_X }, // Right
+        L: { pos: [], axis: this.R_X }, // Left
+        U: { pos: [], axis: this.R_Y }, // Up
+        D: { pos: [], axis: this.R_Y }, // Down
       };
   
       const s = this.size;
       const ss = s * s;
   
-      for (let i = 0; i < ss; i++) this.rotSidePos["F"].pos.push(i); // front
-      for (let i = 0; i < ss; i++) this.rotSidePos["B"].pos.push(i + ss * (s - 1)); // back
-      for (let j = 0; j < s; j++)
-        for (let i = 0; i < s; i++)
-          this.rotSidePos["U"].pos.push(i + j * ss); // up
-      for (let j = 0; j < s; j++)
-        for (let i = 0; i < s; i++)
-          this.rotSidePos["D"].pos.push(s * (s - 1) + i + j * ss); // down
+      // Front face
+      for (let i = 0; i < ss; i++) this.rotSidePos["F"].pos.push(i);
   
+      // Back face
+      for (let i = 0; i < ss; i++) this.rotSidePos["B"].pos.push(i + ss * (s - 1));
+  
+      // Up face
+      for (let j = 0; j < s; j++)
+        for (let i = 0; i < s; i++) this.rotSidePos["U"].pos.push(i + j * ss);
+  
+      // Down face
+      for (let j = 0; j < s; j++)
+        for (let i = 0; i < s; i++) this.rotSidePos["D"].pos.push(s * (s - 1) + i + j * ss);
+  
+      // Left face
       for (let i = 0; i < s; i++) {
-        this.rotSidePos["L"].pos.push(ss * i); // left
+        this.rotSidePos["L"].pos.push(ss * i);
         this.rotSidePos["L"].pos.push(ss * i + s * (s - 1));
       }
-      for (let j = 0; j < s; j++)
-        for (let i = s; i < s + s - 2; i++)
-          this.rotSidePos["L"].pos.push(i + ss * j); // left
   
+      // Right face
       for (let i = 0; i < s; i++) {
-        this.rotSidePos["R"].pos.push(ss * i + s - 1); // right
-        this.rotSidePos["R"].pos.push(ss * i + ss - 1); // s*(s-1)+s-1
+        this.rotSidePos["R"].pos.push(ss * i + s - 1);
+        this.rotSidePos["R"].pos.push(ss * i + ss - 1);
       }
-      for (let j = 0; j < s; j++)
-        for (let i = s + s - 2; i < s + s - 2 + s - 2; i++)
-          this.rotSidePos["R"].pos.push(i + ss * j); // right
     }
   
     rotate3d_x(p, a) {
@@ -151,14 +143,6 @@ class Cube3D {
         pts[i].x = this.Width / 2 + (pts[i].x * scale) / this.scale;
         pts[i].y = this.Height / 2 - (pts[i].y * scale) / this.scale - this.Height / (12 * this.scale);
         pts[i].z = Math.floor(pts[i].z);
-      }
-    }
-  
-    translate3d(pts, t) {
-      for (let i = 0; i < pts.length; i++) {
-        pts[i].x += t.x;
-        pts[i].y += t.y;
-        pts[i].z += t.z;
       }
     }
   
