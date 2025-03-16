@@ -50,19 +50,12 @@
       background: linear-gradient(145deg, rgba(255, 254, 254, 0.9), rgba(0, 0, 0, 0.1));
     }
 
-    .front  { transform: translateZ(30px); }
-    .back   { transform: rotateY(180deg) translateZ(30px); }
-    .right  { transform: rotateY(90deg) translateZ(30px); }
-    .left   { transform: rotateY(-90deg) translateZ(30px); }
-    .top    { transform: rotateX(90deg) translateZ(30px); }
-    .bottom { transform: rotateX(-90deg) translateZ(30px); }
-
-    .red    { background-color: red; }
-    .orange { background-color: orange; }
-    .blue   { background-color: blue; }
-    .green  { background-color: green; }
-    .white  { background-color: white; }
-    .yellow { background-color: yellow; }
+    .front  { transform: translateZ(30px); background-color: red; }
+    .back   { transform: rotateY(180deg) translateZ(30px); background-color: orange; }
+    .right  { transform: rotateY(90deg) translateZ(30px); background-color: blue; }
+    .left   { transform: rotateY(-90deg) translateZ(30px); background-color: green; }
+    .top    { transform: rotateX(90deg) translateZ(30px); background-color: white; }
+    .bottom { transform: rotateX(-90deg) translateZ(30px); background-color: yellow; }
 
     @keyframes rotate {
       0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
@@ -74,39 +67,39 @@
   <div class="scene">
     <!-- Layer 1 (Back Layer) -->
     <div class="cubie" style="transform: translate3d(-60px, -60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
-      <div class="face top white"></div>
+      <div class="face left"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, -60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, -60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(-60px, 0, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, 0, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
@@ -114,36 +107,36 @@
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, 0, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(-60px, 60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, 60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, 60px, -60px);">
-      <div class="face front red"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
 
     <!-- Layer 2 (Middle Layer) -->
@@ -151,8 +144,8 @@
       <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
-      <div class="face top white"></div>
+      <div class="face left"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, -60px, 0);">
@@ -160,22 +153,22 @@
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, -60px, 0);">
       <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(-60px, 0, 0);">
       <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
@@ -190,7 +183,7 @@
     <div class="cubie" style="transform: translate3d(60px, 0, 0);">
       <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
@@ -199,9 +192,9 @@
       <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, 60px, 0);">
       <div class="face front"></div>
@@ -209,52 +202,52 @@
       <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, 60px, 0);">
       <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
 
     <!-- Layer 3 (Front Layer) -->
     <div class="cubie" style="transform: translate3d(-60px, -60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
-      <div class="face top white"></div>
+      <div class="face left"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, -60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, -60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
-      <div class="face top white"></div>
+      <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(-60px, 0, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, 0, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
@@ -262,36 +255,36 @@
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, 0, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
       <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(-60px, 60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
-      <div class="face left green"></div>
+      <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(0, 60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
       <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
     <div class="cubie" style="transform: translate3d(60px, 60px, 60px);">
-      <div class="face front orange"></div>
+      <div class="face front"></div>
       <div class="face back"></div>
-      <div class="face right blue"></div>
+      <div class="face right"></div>
       <div class="face left"></div>
       <div class="face top"></div>
-      <div class="face bottom yellow"></div>
+      <div class="face bottom"></div>
     </div>
   </div>
   <script>
