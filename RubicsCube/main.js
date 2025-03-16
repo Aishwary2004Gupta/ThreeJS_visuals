@@ -107,9 +107,8 @@ function rotateLayer(cubeGroup, axis, index, angle) {
 
   layerGroup.rotateOnAxis(rotationAxis, angle);
 
-  cubeGroup.clear();
-  cubeGroup.add(layerGroup);
   remainingGroup.children.forEach((cubie) => cubeGroup.add(cubie));
+  cubeGroup.add(layerGroup);
 }
 
 // Initialize the scene
