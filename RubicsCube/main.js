@@ -90,11 +90,20 @@ function createCubie(x, y, z) {
 
 // Rotate a layer of the Rubik's Cube
 function rotateLayer(cubeGroup, axis, index, angle) {
-  cubeGroup.children.forEach((cubie) => {
-    const position = cubie.position[axis];
-    if (Math.round(position) === index) {
-      cubie.rotation[axis] += angle;
-    }
+  const layer = cubeGroup.children.filter((cubie) => {
+    const position = Math.round(cubie.position[axis]);
+    return position === index;
+  });
+
+  const rotationAxis = new THREE.Vector3();
+  rotationAxis[axis] = 1;
+
+  const quaternion = new THREE.Quaternion();
+  quaternion.setFromAxisAngle(rotationAxis, angle);
+
+  layer.forEach((cubie) => {
+    cubie.applyQuaternion(quaternion);
+    cubie.position.applyQuaternion(quaternion);
   });
 }
 
@@ -139,9 +148,9 @@ function initScene() {
 
     // Rotate layers automatically
     time += speed;
-    rotateLayer(rubiksCube, 'x', 0, speed); // Rotate top layer
+    rotateLayer(rubiksCube, 'x', 1, speed); // Rotate middle layer
     rotateLayer(rubiksCube, 'y', 1, speed); // Rotate middle layer
-    rotateLayer(rubiksCube, 'z', -1, speed); // Rotate front layer
+    rotateLayer(rubiksCube, 'z', 1, speed); // Rotate middle layer
 
     controls.update();
     renderer.render(scene, camera);
