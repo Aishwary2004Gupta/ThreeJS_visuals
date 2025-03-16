@@ -44,13 +44,13 @@ function createCubie(x, y, z) {
   const faceGeometry = new THREE.PlaneGeometry(CUBIE_SIZE * 0.9, CUBIE_SIZE * 0.9);
 
   if (x === 0) {
-    const face = new THREE.Mesh(faceGeometry, faceMaterials[0]); // Red
+    const face = new THREE.Mesh(faceGeometry, faceMaterials[1]); // Blue
     face.position.set(-CUBIE_SIZE / 2, 0, 0);
     face.rotation.y = Math.PI / 2;
     cubieGroup.add(face);
   }
   if (x === CUBE_SIZE - 1) {
-    const face = new THREE.Mesh(faceGeometry, faceMaterials[1]); // Blue
+    const face = new THREE.Mesh(faceGeometry, faceMaterials[4]); // White
     face.position.set(CUBIE_SIZE / 2, 0, 0);
     face.rotation.y = Math.PI / 2;
     cubieGroup.add(face);
@@ -62,13 +62,13 @@ function createCubie(x, y, z) {
     cubieGroup.add(face);
   }
   if (y === CUBE_SIZE - 1) {
-    const face = new THREE.Mesh(faceGeometry, faceMaterials[3]); // Green
+    const face = new THREE.Mesh(faceGeometry, faceMaterials[0]); // Red
     face.position.set(0, CUBIE_SIZE / 2, 0);
     face.rotation.x = Math.PI / 2;
     cubieGroup.add(face);
   }
   if (z === 0) {
-    const face = new THREE.Mesh(faceGeometry, faceMaterials[4]); // White
+    const face = new THREE.Mesh(faceGeometry, faceMaterials[3]); // Green
     face.position.set(0, 0, -CUBIE_SIZE / 2);
     cubieGroup.add(face);
   }
