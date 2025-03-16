@@ -22,7 +22,7 @@
       position: relative;
       transform-style: preserve-3d;
       transform: rotateX(-30deg) rotateY(-45deg);
-      animation: rotate 20s infinite linear; /* Continuous rotation */
+      animation: rotate 10s infinite linear;
     }
 
     .cubie {
@@ -30,7 +30,6 @@
       height: 60px;
       position: absolute;
       transform-style: preserve-3d;
-      transition: transform 1s ease-in-out; /* Smooth face rotations */
     }
 
     .face {
@@ -287,66 +286,5 @@
       <div class="face bottom"></div>
     </div>
   </div>
-  <script>
-    const scene = document.querySelector('.scene');
-    const cubies = document.querySelectorAll('.cubie');
-
-    function rotateLayer(layer, axis, angle) {
-      layer.forEach(cubie => {
-        cubie.style.transform += ` rotate${axis.toUpperCase()}(${angle}deg)`;
-      });
-    }
-
-    function getLayer(axis, index) {
-      const layers = {
-        x: [
-          [cubies[0], cubies[1], cubies[2], cubies[3], cubies[4], cubies[5], cubies[6], cubies[7], cubies[8]], // Front layer
-          [cubies[9], cubies[10], cubies[11], cubies[12], cubies[13], cubies[14], cubies[15], cubies[16], cubies[17]], // Middle layer
-          [cubies[18], cubies[19], cubies[20], cubies[21], cubies[22], cubies[23], cubies[24], cubies[25], cubies[26]] // Back layer
-        ],
-        y: [
-          [cubies[0], cubies[1], cubies[2], cubies[9], cubies[10], cubies[11], cubies[18], cubies[19], cubies[20]], // Top layer
-          [cubies[3], cubies[4], cubies[5], cubies[12], cubies[13], cubies[14], cubies[21], cubies[22], cubies[23]], // Middle layer
-          [cubies[6], cubies[7], cubies[8], cubies[15], cubies[16], cubies[17], cubies[24], cubies[25], cubies[26]] // Bottom layer
-        ],
-        z: [
-          [cubies[0], cubies[3], cubies[6], cubies[9], cubies[12], cubies[15], cubies[18], cubies[21], cubies[24]], // Left layer
-          [cubies[1], cubies[4], cubies[7], cubies[10], cubies[13], cubies[16], cubies[19], cubies[22], cubies[25]], // Middle layer
-          [cubies[2], cubies[5], cubies[8], cubies[11], cubies[14], cubies[17], cubies[20], cubies[23], cubies[26]] // Right layer
-        ]
-      };
-      return layers[axis][index];
-    }
-
-    function scrambleCube() {
-      // Example scramble: rotate some layers randomly
-      rotateLayer(getLayer('x', 0), 'x', 90);
-      rotateLayer(getLayer('y', 1), 'y', -90);
-      rotateLayer(getLayer('z', 2), 'z', 180);
-    }
-
-    function solveCube() {
-      // Example solve: reverse the scramble
-      rotateLayer(getLayer('x', 0), 'x', -90);
-      rotateLayer(getLayer('y', 1), 'y', 90);
-      rotateLayer(getLayer('z', 2), 'z', -180);
-    }
-
-    function toggleCubeState() {
-      if (scene.classList.contains('scrambled')) {
-        solveCube();
-        scene.classList.remove('scrambled');
-      } else {
-        scrambleCube();
-        scene.classList.add('scrambled');
-      }
-    }
-
-    // Initially scramble the cube
-    scrambleCube();
-
-    // Toggle cube state every 5 seconds
-    setInterval(toggleCubeState, 5000);
-  </script>
 </body>
 </html>
