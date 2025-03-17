@@ -173,7 +173,7 @@
                             
                             // Add black edges
                             const edgesGeometry = new THREE.EdgesGeometry(geometry);
-                            const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 2 });
+                            const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1 });
                             const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
                             
                             cubeGroup.add(cube);
