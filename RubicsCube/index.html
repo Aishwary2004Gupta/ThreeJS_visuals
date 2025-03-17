@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,19 +50,48 @@
       background: linear-gradient(145deg, rgba(255, 254, 254, 0.9), rgba(0, 0, 0, 0.1));
     }
 
-    .front  { transform: translateZ(30px); background-color: red; }
-    .back   { transform: rotateY(180deg) translateZ(30px); background-color: orange; }
-    .right  { transform: rotateY(90deg) translateZ(30px); background-color: blue; }
-    .left   { transform: rotateY(-90deg) translateZ(30px); background-color: green; }
-    .top    { transform: rotateX(90deg) translateZ(30px); background-color: white; }
-    .bottom { transform: rotateX(-90deg) translateZ(30px); background-color: yellow; }
+    .front {
+      transform: translateZ(30px);
+      background-color: red;
+    }
+
+    .back {
+      transform: rotateY(180deg) translateZ(30px);
+      background-color: orange;
+    }
+
+    .right {
+      transform: rotateY(90deg) translateZ(30px);
+      background-color: blue;
+    }
+
+    .left {
+      transform: rotateY(-90deg) translateZ(30px);
+      background-color: green;
+    }
+
+    .top {
+      transform: rotateX(90deg) translateZ(30px);
+      background-color: white;
+    }
+
+    .bottom {
+      transform: rotateX(-90deg) translateZ(30px);
+      background-color: yellow;
+    }
 
     @keyframes rotate {
-      0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+      0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+      }
+
+      100% {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="scene">
     <!-- Layer 1 (Back Layer) -->
@@ -287,4 +317,5 @@
     </div>
   </div>
 </body>
+
 </html>
