@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Rubik's Cube</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.137/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tween.js@18.6.4/dist/tween.umd.js"></script>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 2);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 10, 7.5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        // Background
+        scene.background = new THREE.Color(0x1a1a1a);
+
+        // Camera position
+        camera.position.set(5, 5, 5);
+        camera.lookAt(0, 0, 0);
+
+        // OrbitControls for interactive camera
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+
+        // Rubik's Cube setup
+        const cubeSize = 3; // 3x3x3 Rubik's Cube
+        const pieceSize = 1;
+        const gap = 0.05; // Gap between pieces
+        const colors = [0xffffff, 0xff0000, 0x0000ff, 0x00ff00, 0xffff00, 0xffa500]; // White, Red, Blue, Green, Yellow, Orange
+
+        // Create a single piece
+        function createPiece(x, y, z) {
+            const geometry = new THREE.BoxGeometry(pieceSize, pieceSize, pieceSize);
+            const material = colors.map(color => new THREE.MeshStandardMaterial({ color, roughness: 0.5, metalness: 0.1 }));
+            const piece = new THREE.Mesh(geometry, material);
+            piece.position.set(x, y, z);
+            piece.castShadow = true;
+            piece.receiveShadow = true;
+            return piece;
+        }
+
+        // Create the entire Rubik's Cube
+        const cube = new THREE.Group();
+        for (let x = -1; x <= 1; x++) {
+            for (let y = -1; y <= 1; y++) {
+                for (let z = -1; z <= 1; z++) {
+                    const piece = createPiece(x * (pieceSize + gap), y * (pieceSize + gap), z * (pieceSize + gap));
+                    cube.add(piece);
+                }
+            }
+        }
+        scene.add(cube);
+
+        // Layer rotation logic
+        let isRotating = false;
+
+        function rotateLayer(axis, index, angle) {
+            if (isRotating) return;
+            isRotating = true;
+
+            const layer = new THREE.Group();
+            cube.children.forEach(piece => {
+                if (Math.round(piece.position[axis]) === index) {
+                    layer.add(piece);
+                }
+            });
+
+            scene.add(layer);
+            cube.remove(layer);
+
+            const targetRotation = new THREE.Euler();
+            targetRotation[axis] = angle;
+
+            new TWEEN.Tween(layer.rotation)
+                .to({ [axis]: targetRotation[axis] }, 300)
+                .easing(TWEEN.Easing.Quadratic.Out)
+                .onComplete(() => {
+                    layer.children.forEach(piece => cube.attach(piece));
+                    scene.remove(layer);
+                    isRotating = false;
+                })
+                .start();
+        }
+
+        // Event listeners for layer rotation
+        window.addEventListener('keydown', (event) => {
+            const angle = Math.PI / 2; // 90 degrees
+            switch (event.key) {
+                case 'u': rotateLayer('y', 1, angle); break; // Upper layer
+                case 'd': rotateLayer('y', -1, -angle); break; // Down layer
+                case 'l': rotateLayer('x', -1, -angle); break; // Left layer
+                case 'r': rotateLayer('x', 1, angle); break; // Right layer
+                case 'f': rotateLayer('z', 1, angle); break; // Front layer
+                case 'b': rotateLayer('z', -1, -angle); break; // Back layer
+            }
+        });
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            TWEEN.update();
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Initial rotation to show unsolved state
+        rotateLayer('y', 1, Math.PI / 2); // Rotate the upper layer
+    </script>
+</body>
+</html>
