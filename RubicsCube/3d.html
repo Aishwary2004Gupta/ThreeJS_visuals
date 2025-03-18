@@ -134,42 +134,42 @@
                             
                             // Right face (red)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isRightFace ? colors[0] : 0x111111,
+                                color: isRightFace ? 0xff3333 : 0x333333, // brighter red
                                 metalness: isRightFace ? 0.8 : 0.2,
                                 roughness: isRightFace ? 0.4 : 0.8
                             }));
                             
                             // Left face (orange)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isLeftFace ? colors[1] : 0x111111,
+                                color: isLeftFace ? 0xffaa33 : 0x333333, // brighter orange
                                 metalness: isLeftFace ? 0.8 : 0.2,
                                 roughness: isLeftFace ? 0.4 : 0.8
                             }));
                             
                             // Top face (yellow)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isTopFace ? colors[2] : 0x111111,
+                                color: isTopFace ? 0xffff33 : 0x333333, // brighter yellow
                                 metalness: isTopFace ? 0.8 : 0.2,
                                 roughness: isTopFace ? 0.4 : 0.8
                             }));
                             
                             // Bottom face (white)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isBottomFace ? colors[3] : 0x111111,
+                                color: isBottomFace ? 0xffffff : 0x333333, // brighter white
                                 metalness: isBottomFace ? 0.8 : 0.2,
                                 roughness: isBottomFace ? 0.4 : 0.8
                             }));
                             
                             // Front face (blue)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isFrontFace ? colors[4] : 0x111111,
+                                color: isFrontFace ? 0x3333ff : 0x333333, // brighter blue
                                 metalness: isFrontFace ? 0.8 : 0.2,
                                 roughness: isFrontFace ? 0.4 : 0.8
                             }));
                             
                             // Back face (green)
                             materials.push(new THREE.MeshStandardMaterial({
-                                color: isBackFace ? colors[5] : 0x111111,
+                                color: isBackFace ? 0x33ff33 : 0x333333, // brighter green
                                 metalness: isBackFace ? 0.8 : 0.2,
                                 roughness: isBackFace ? 0.4 : 0.8
                             }));
