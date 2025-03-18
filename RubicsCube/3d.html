@@ -133,39 +133,45 @@
                             const isBackFace = z === 0;
                             
                             // Right face (red)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isRightFace ? colors[0] : 0x111111,
-                                emissive: isRightFace ? 0x222222 : 0x000000
+                                metalness: isRightFace ? 0.8 : 0.2,
+                                roughness: isRightFace ? 0.4 : 0.8
                             }));
                             
                             // Left face (orange)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isLeftFace ? colors[1] : 0x111111,
-                                emissive: isLeftFace ? 0x222222 : 0x000000
+                                metalness: isLeftFace ? 0.8 : 0.2,
+                                roughness: isLeftFace ? 0.4 : 0.8
                             }));
                             
                             // Top face (yellow)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isTopFace ? colors[2] : 0x111111,
-                                emissive: isTopFace ? 0x222222 : 0x000000
+                                metalness: isTopFace ? 0.8 : 0.2,
+                                roughness: isTopFace ? 0.4 : 0.8
                             }));
                             
                             // Bottom face (white)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isBottomFace ? colors[3] : 0x111111,
-                                emissive: isBottomFace ? 0x222222 : 0x000000
+                                metalness: isBottomFace ? 0.8 : 0.2,
+                                roughness: isBottomFace ? 0.4 : 0.8
                             }));
                             
                             // Front face (blue)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isFrontFace ? colors[4] : 0x111111,
-                                emissive: isFrontFace ? 0x222222 : 0x000000
+                                metalness: isFrontFace ? 0.8 : 0.2,
+                                roughness: isFrontFace ? 0.4 : 0.8
                             }));
                             
                             // Back face (green)
-                            materials.push(new THREE.MeshLambertMaterial({
+                            materials.push(new THREE.MeshStandardMaterial({
                                 color: isBackFace ? colors[5] : 0x111111,
-                                emissive: isBackFace ? 0x222222 : 0x000000
+                                metalness: isBackFace ? 0.8 : 0.2,
+                                roughness: isBackFace ? 0.4 : 0.8
                             }));
                             
                             // Create the cube with materials
