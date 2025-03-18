@@ -191,15 +191,13 @@
 
                 // Animation loop
                 const animate = () => {
-                    requestAnimationFrame(animate);
-                    
                     if (!isPaused) {
                         rubiksCube.rotation.x += rotationSpeed;
                         rubiksCube.rotation.y += rotationSpeed * 1.5;
                     }
-                    
                     controls.update();
                     renderer.render(scene, camera);
+                    requestAnimationFrame(animate);
                 };
                 
                 animate();
