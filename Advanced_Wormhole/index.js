@@ -42,17 +42,17 @@ const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
 
 //create a tube geometry using spline
 const tubeGeometry = new THREE.TubeGeometry(spline, 200, 0.8, 20, true);
-const tubeMaterial = new THREE.MeshStandardMaterial({ 
-    color: 0xff0000,
-    emissive: 0x550000,
-    emissiveIntensity: 0.5,
-    side: THREE.DoubleSide,
-    roughness: 0.5,
-    metalness: 0.3,
-    // wireframe: true 
-});
-const tube = new THREE.Mesh(tubeGeometry, tubeMaterial);
-scene.add(tube);
+// const tubeMaterial = new THREE.MeshStandardMaterial({ 
+//     color: 0xff0000,
+//     emissive: 0x550000,
+//     emissiveIntensity: 0.5,
+//     side: THREE.DoubleSide,
+//     roughness: 0.5,
+//     metalness: 0.3,
+//     // wireframe: true 
+// });
+// const tube = new THREE.Mesh(tubeGeometry, tubeMaterial);
+// scene.add(tube);
 
 
 //create edges geometry using spline
