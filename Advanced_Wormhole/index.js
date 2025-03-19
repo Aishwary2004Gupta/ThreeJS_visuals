@@ -105,8 +105,8 @@ for (let i = 0; i < numBoxes; i++){
     boxLines.position.copy(pos);
     boxLines.rotation.set(rote.x, rote.y, rote.z);
     
-    scene.add(box);
-    // scene.add(boxLines);
+    // scene.add(box);
+    scene.add(boxLines);
 }
 
 //camera fly-throught
