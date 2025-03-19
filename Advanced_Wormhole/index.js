@@ -94,7 +94,8 @@ for (let i = 0; i < numBoxes; i++){
     );
     box.rotation.set(rote.x, rote.y, rote.z);
     const edges = new THREE.EdgesGeometry(boxGeometry, 0.2);
-    const color = new THREE.Color().setHSL(3.0 - p, 1, 0.5); //if you want the boxes to change colours use this line and remove the red colour from the next line
+    // const color = new THREE.Color().setHSL(3.0 - p, 1, 0.5); //if you want the boxes to change colours use this line and remove the red colour from the next line
+    const color = new THREE.Color(0xff0909);
     const lineMat = new THREE.LineBasicMaterial({ color }); //red 0xff0909 if you need only one colour
     const boxLines = new THREE.LineSegments(edges, lineMat);
     boxLines.position.copy(pos);
