@@ -48,7 +48,7 @@ function initScene(data) {
     });
     const lensMesh = new THREE.Mesh(lensGeo, lensMat);
     lensMesh.position.z = 2;
-    scene.add(lensMesh);
+    // scene.add(lensMesh);
 
     // scene.add(getBgSphere());
 
