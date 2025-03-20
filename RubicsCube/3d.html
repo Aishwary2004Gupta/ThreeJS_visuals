@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Rubik's Cube</title>
     <style>
-        body { 
-            margin: 0; 
-            overflow: hidden; 
-            background-color: black; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
         #root {
             width: 100%;
             height: 100%;
         }
+
         .controls {
             position: absolute;
             top: 10px;
@@ -27,6 +30,7 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
+
         .instructions {
             position: absolute;
             bottom: 10px;
@@ -38,6 +42,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="root"></div>
     <script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"></script>
@@ -112,18 +117,18 @@
                     for (let y = 0; y < 3; y++) {
                         for (let z = 0; z < 3; z++) {
                             const cubeGroup = new THREE.Group();
-                            
+
                             // Position for this small cube
                             const xPos = startPos + x * (cubeSize + gap);
                             const yPos = startPos + y * (cubeSize + gap);
                             const zPos = startPos + z * (cubeSize + gap);
-                            
+
                             cubeGroup.position.set(xPos, yPos, zPos);
-                            
+
                             // Create the 6 faces for each small cube
                             const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
                             const materials = [];
-                            
+
                             // Determine which faces are visible (on the outside of the Rubik's cube)
                             const isRightFace = x === 2;
                             const isLeftFace = x === 0;
@@ -131,57 +136,57 @@
                             const isBottomFace = y === 0;
                             const isFrontFace = z === 2;
                             const isBackFace = z === 0;
-                            
+
                             // Right face (red)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isRightFace ? 0xff3333 : 0x333333, // brighter red
                                 metalness: isRightFace ? 0.8 : 0.2,
                                 roughness: isRightFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Left face (orange)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isLeftFace ? 0xffaa33 : 0x333333, // brighter orange
                                 metalness: isLeftFace ? 0.8 : 0.2,
                                 roughness: isLeftFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Top face (yellow)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isTopFace ? 0xffff33 : 0x333333, // brighter yellow
                                 metalness: isTopFace ? 0.8 : 0.2,
                                 roughness: isTopFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Bottom face (white)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isBottomFace ? 0xffffff : 0x333333, // brighter white
                                 metalness: isBottomFace ? 0.8 : 0.2,
                                 roughness: isBottomFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Front face (blue)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isFrontFace ? 0x3333ff : 0x333333, // brighter blue
                                 metalness: isFrontFace ? 0.8 : 0.2,
                                 roughness: isFrontFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Back face (green)
                             materials.push(new THREE.MeshStandardMaterial({
                                 color: isBackFace ? 0x33ff33 : 0x333333, // brighter green
                                 metalness: isBackFace ? 0.8 : 0.2,
                                 roughness: isBackFace ? 0.4 : 0.8
                             }));
-                            
+
                             // Create the cube with materials
                             const cube = new THREE.Mesh(geometry, materials);
-                            
+
                             // Add black edges
                             const edgesGeometry = new THREE.EdgesGeometry(geometry);
                             const edgesMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1 });
                             const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial);
-                            
+
                             cubeGroup.add(cube);
                             cubeGroup.add(edges);
                             rubiksCube.add(cubeGroup);
@@ -199,7 +204,7 @@
                     renderer.render(scene, camera);
                     requestAnimationFrame(animate);
                 };
-                
+
                 animate();
 
                 // Handle window resize
@@ -208,7 +213,7 @@
                     camera.updateProjectionMatrix();
                     renderer.setSize(window.innerWidth, window.innerHeight);
                 };
-                
+
                 window.addEventListener('resize', handleResize);
 
                 // Cleanup
@@ -254,7 +259,7 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div className="instructions">
                         <h2 className="text-lg font-semibold mb-2 text-gray-800">Instructions</h2>
                         <ul className="text-sm text-gray-700 list-disc pl-5 space-y-1">
@@ -264,7 +269,7 @@
                             <li>Press Pause to stop automatic rotation</li>
                         </ul>
                     </div>
-                    
+
                     <div ref={mountRef} className="w-full h-full absolute inset-0" />
                 </div>
             );
@@ -273,4 +278,5 @@
         ReactDOM.render(<RubiksCube />, document.getElementById('root'));
     </script>
 </body>
+
 </html>
