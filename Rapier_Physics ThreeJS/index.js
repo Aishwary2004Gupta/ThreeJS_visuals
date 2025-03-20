@@ -48,7 +48,7 @@ const mouseBall = getMouseBall(RAPIER, world);
 scene.add(mouseBall.mesh);
 
 const hemiLight = new THREE.HemisphereLight(0x00bbff, 0xaa00ff);
-hemiLight.intensity = 0.5; // Increased intensity for brighter background lights
+hemiLight.intensity = 0.1; // Increased intensity for brighter background lights
 scene.add(hemiLight);
 
 //BG
