@@ -20,14 +20,14 @@ function getSprite({ hasFog, color, opacity, path, pos, size }) {
 }
 
 function getLayer({
-    hasFog = true,
+    hasFog = false,
     hue = 0.0,
-    numSprites = 10,
+    numSprites = 0,
     opacity = 1,
     path = "./rad-grad.png",
-    radius = 1,
-    sat = 0.5,
-    size = 1,
+    radius = 0,
+    sat = 0,
+    size = 0,
     z = 0,
 }) {
     const layerGroup = new THREE.Group();
