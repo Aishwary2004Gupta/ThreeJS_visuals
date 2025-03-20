@@ -29,7 +29,7 @@ const world = new RAPIER.World(gravity);
 //post-processing
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 1.5, 0.5, 20);
-bloomPass.threshold = 0.02;
+bloomPass.threshold = 1.02;
 bloomPass.strength = 2.0;
 bloomPass.radius = 0;
 const composer = new EffectComposer(renderer);
