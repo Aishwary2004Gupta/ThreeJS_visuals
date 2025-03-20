@@ -20,7 +20,7 @@ function getSprite({ hasFog, color, opacity, path, pos, size }) {
 }
 
 function getLayer({
-    hasFog = false,
+    hasFog = true,
     hue = 0.0,
     numSprites = 0,
     opacity = 1,
