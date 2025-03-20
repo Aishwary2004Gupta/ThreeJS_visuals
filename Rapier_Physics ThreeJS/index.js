@@ -48,7 +48,7 @@ const mouseBall = getMouseBall(RAPIER, world);
 scene.add(mouseBall.mesh);
 
 const hemiLight = new THREE.HemisphereLight(0x00bbff, 0xaa00ff);
-hemiLight.intensity = 0.2;
+hemiLight.intensity = 0.5; // Increased intensity for brighter background lights
 scene.add(hemiLight);
 
 //BG
@@ -85,5 +85,7 @@ window.addEventListener('resize', handleWindowResize, true);
 function handleMouseMove(evt) {
     mousePos.x = (evt.clientX / window.innerWidth) * 2 - 1;
     mousePos.y = -(evt.clientY / window.innerHeight) * 2 + 1;
+    mousePos.z = 0; // Ensure the z-coordinate is set for proper tracking
+    mouseBall.mesh.position.set(mousePos.x * 5, mousePos.y * 5, mousePos.z); // Update mouse ball position
 }
 window.addEventListener('mousemove', handleMouseMove, true);
