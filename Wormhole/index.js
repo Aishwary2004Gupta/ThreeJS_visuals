@@ -22,7 +22,7 @@ document.body.appendChild(renderer.domElement);
 const points = spline.getPoints(100);
 const geometry = new THREE.BufferGeometry().setFromPoints(points);
 const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-const line = new THREE.Line(geometry, material);
+// const line = new THREE.Line(geometry, material);
 // scene.add(line);
 
 //create a tube geometry using spline
