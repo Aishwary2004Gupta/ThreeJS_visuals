@@ -31,7 +31,7 @@ const tubeMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     // metalness: 0.5,
     // side: THREE.DoubleSide,    
-    wireframe: true,
+    wireframe: false,
     // wireframeLinewidth: 10,
     // depthWrite: true,
     // transparent: true,
