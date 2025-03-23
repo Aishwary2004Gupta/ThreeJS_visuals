@@ -43,6 +43,14 @@
         pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
+        // Add OrbitControls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; // Enable smooth damping (inertia)
+        controls.dampingFactor = 0.05; // Set damping factor
+        controls.screenSpacePanning = true; // Allow panning in screen space
+        controls.minDistance = 2; // Minimum zoom distance
+        controls.maxDistance = 10; // Maximum zoom distance
+
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
