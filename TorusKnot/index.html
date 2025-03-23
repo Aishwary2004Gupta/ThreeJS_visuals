@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js TorusKnot with OrbitControls</title>
+    <title>Three.js TorusKnot Example</title>
     <style>
         body { margin: 0; }
         canvas { display: block; }
@@ -12,9 +12,9 @@
 <body>
     <!-- Three.js will render into this canvas -->
     <script type="module">
-        // Import Three.js and OrbitControls
+        // Import Three.js
         import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.module.js';
-        import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
+        
 
         // Create the scene
         const scene = new THREE.Scene();
@@ -30,7 +30,7 @@
 
         // Create the TorusKnot geometry
         const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-        const material = new THREE.MeshStandardMaterial({ color: 0xff6347, metalness: 0.5, roughness: 0.5 });
+        const material = new THREE.MeshStandardMaterial({ color: 0xff6047, metalness: 0.5, roughness: 0.5 });
         const torusKnot = new THREE.Mesh(geometry, material);
         scene.add(torusKnot);
 
@@ -42,26 +42,14 @@
         pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
-        // Add OrbitControls
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Enable smooth damping (inertia)
-        controls.dampingFactor = 0.05; // Set damping factor
-        controls.screenSpacePanning = true; // Allow panning in screen space
-        controls.minDistance = 2; // Minimum zoom distance
-        controls.maxDistance = 10; // Maximum zoom distance
-
         // Animation loop
         function animate() {
             requestAnimationFrame(animate);
-
-            // Update OrbitControls
-            controls.update();
 
             // Rotate the TorusKnot
             torusKnot.rotation.x += 0.01;
             torusKnot.rotation.y += 0.01;
 
-            // Render the scene
             renderer.render(scene, camera);
         }
         animate();
