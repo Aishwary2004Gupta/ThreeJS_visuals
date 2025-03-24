@@ -11,8 +11,9 @@
 </head>
 <body>
     <script type="module">
-        import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.module.js';
-        import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
+        // Import Three.js from CDN
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js';
+        import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.132.2/examples/jsm/controls/OrbitControls.js';
 
         // Scene setup
         const scene = new THREE.Scene();
@@ -31,49 +32,40 @@
         pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
-        // Texture loader
-        const textureLoader = new THREE.TextureLoader();
-        let torusKnot;
+        // Create TorusKnot with texture
+        const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
+        
+        // First create with basic material
+        const tempMaterial = new THREE.MeshStandardMaterial({
+            color: 0x0000ff,  // Blue as fallback
+            metalness: 0.5,
+            roughness: 0.5
+        });
+        
+        const torusKnot = new THREE.Mesh(geometry, tempMaterial);
+        scene.add(torusKnot);
 
-        // Load texture and create object
+        // Try loading texture
+        const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
-            '../assets/blue.jpg',  // Make sure this path is correct or use a full URL
+            'blue.jpg',  // Path to your texture
             (texture) => {
-                // Texture loaded successfully
+                // Success - apply texture
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set(2, 2);
-
-                const material = new THREE.MeshStandardMaterial({
-                    map: texture,
-                    metalness: 0.5,
-                    roughness: 0.5
-                });
-
-                const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-                torusKnot = new THREE.Mesh(geometry, material);
-                scene.add(torusKnot);
-
-                // Start animation only after texture loads
-                animate();
+                
+                torusKnot.material.map = texture;
+                torusKnot.material.needsUpdate = true;
             },
-            undefined,  // Progress callback (optional)
+            undefined,  // Progress callback
             (error) => {
-                console.error('Error loading texture:', error);
-                // Fallback to basic material if texture fails to load
-                const material = new THREE.MeshStandardMaterial({
-                    color: 0x0000ff,  // Blue color as fallback
-                    metalness: 0.5,
-                    roughness: 0.5
-                });
-                const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-                torusKnot = new THREE.Mesh(geometry, material);
-                scene.add(torusKnot);
-                animate();
+                console.error('Texture loading failed:', error);
+                // Keep the fallback blue material
             }
         );
 
-        // OrbitControls
+        // OrbitControls setup
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
         controls.dampingFactor = 0.05;
@@ -85,14 +77,13 @@
         function animate() {
             requestAnimationFrame(animate);
             
-            if (torusKnot) {
-                torusKnot.rotation.x += 0.01;
-                torusKnot.rotation.y += 0.01;
-            }
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
             
             controls.update();
             renderer.render(scene, camera);
         }
+        animate();
 
         // Handle window resize
         window.addEventListener('resize', () => {
