@@ -5,15 +5,19 @@
 const promoPopup = document.getElementsByClassName('promo')[0];
 const promoPopupClose = document.getElementsByClassName('promo-close')[0];
 
-if (isMobile()) {
-    setTimeout(() => {
-        promoPopup.style.display = 'table';
-    }, 20000);
-}
+if (promoPopup && promoPopupClose) {
+    if (isMobile()) {
+        setTimeout(() => {
+            promoPopup.style.display = 'table';
+        }, 20000);
+    }
 
-promoPopupClose.addEventListener('click', e => {
-    promoPopup.style.display = 'none';
-});
+    promoPopupClose.addEventListener('click', e => {
+        promoPopup.style.display = 'none';
+    });
+} else {
+    console.error("promoPopup or promoPopupClose not found in the DOM.");
+}
 
 const appleLink = document.getElementById('apple_link');
 appleLink.addEventListener('click', e => {
