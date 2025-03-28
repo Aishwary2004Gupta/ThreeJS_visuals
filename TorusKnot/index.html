@@ -21,6 +21,7 @@
     <script type="module">
         // Import Three.js
         import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.module.js';
+        // import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
 
         // Create the scene
         const scene = new THREE.Scene();
@@ -34,9 +35,21 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        // Enable OrbitControls
+        // const controls = new OrbitControls(camera, renderer.domElement);
+        // controls.enableDamping = true; // Smooth camera movement
+
+        // Load texture
+        const textureLoader = new THREE.TextureLoader();
+        const texture = textureLoader.load('../assets/R.jpeg', 
+            () => console.log('Texture loaded successfully'), 
+            undefined, 
+            (err) => console.error('Failed to load texture:', err)
+        );
+
         // Create the TorusKnot geometry
         const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-        const material = new THREE.MeshStandardMaterial({ color: 0xff6047, metalness: 0.5, roughness: 0.5 });
+        const material = new THREE.MeshStandardMaterial({ map: texture, metalness: 0.5, roughness: 0.5 });
         const torusKnot = new THREE.Mesh(geometry, material);
         scene.add(torusKnot);
 
@@ -55,6 +68,9 @@
             // Rotate the TorusKnot
             torusKnot.rotation.x += 0.01;
             torusKnot.rotation.y += 0.01;
+
+            // Update controls
+            // controls.update();
 
             renderer.render(scene, camera);
         }
