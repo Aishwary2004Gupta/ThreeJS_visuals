@@ -1,4 +1,4 @@
-import * as THREE from "three"; 
+import * as THREE from "three";
 // import { OrbitControls } from "jsm/controls/OrbitControls.js"; 
 import spline from "./spline.js";
 import getStarfield from "./star/getStarfield.js";
@@ -27,7 +27,7 @@ const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
 
 //create a tube geometry using spline
 const tubeGeometry = new THREE.TubeGeometry(spline, 222, 0.65, 20, true);
-const tubeMaterial = new THREE.MeshStandardMaterial({ 
+const tubeMaterial = new THREE.MeshStandardMaterial({
     color: 0xffffff,
     // metalness: 0.5,
     // side: THREE.DoubleSide,    
@@ -53,7 +53,7 @@ scene.add(hemiLight);
 function updateCamera(t) {
     const time = t * 0.1;
     const looptime = 10 * 1000;
-    const p = (time % looptime) / looptime; 
+    const p = (time % looptime) / looptime;
     const pos = tubeGeometry.parameters.path.getPointAt(p);
     camera.position.copy(pos);
     const lookAt = tubeGeometry.parameters.path.getPointAt((p + 0.01) % 1);
@@ -71,7 +71,7 @@ function animate(t = 0) { //passing in a time span
 
 animate();
 
-function handleWindowResize () {
+function handleWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
