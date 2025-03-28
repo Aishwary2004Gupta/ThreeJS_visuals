@@ -43,11 +43,11 @@ const curvePath = [10.136184463414924, -1.374508746897471, 10.384881573913269,
 const points = [];
 const len = curvePath.length;
 for (let p = 0; p < len; p += 3) {
-    points.push(new THREE.Vector3( //converting the points into Vector3
-    curvePath[p], 
-    curvePath[p + 1], 
-    curvePath[p + 2])
-    );
+	points.push(new THREE.Vector3( //converting the points into Vector3
+		curvePath[p],
+		curvePath[p + 1],
+		curvePath[p + 2])
+	);
 }
 
 const spline = new THREE.CatmullRomCurve3(points); //for moving through points 
