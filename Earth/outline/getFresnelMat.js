@@ -1,12 +1,12 @@
 import * as THREE from "three";
 
-function getFresnelMat({rimHex = 0x0088ff, facingHex = 0x000000} = {}) {
+function getFresnelMat({ rimHex = 0x0088ff, facingHex = 0x000000 } = {}) {
     const uniforms = {
-    color1: { value: new THREE.Color(rimHex) },
-    color2: { value: new THREE.Color(facingHex) },
-    fresnelBias: { value: 0.1 },
-    fresnelScale: { value: 1.0 },
-    fresnelPower: { value: 4.0 },
+        color1: { value: new THREE.Color(rimHex) },
+        color2: { value: new THREE.Color(facingHex) },
+        fresnelBias: { value: 0.1 },
+        fresnelScale: { value: 1.0 },
+        fresnelPower: { value: 4.0 },
     };
     const vs = `
     uniform float fresnelBias;
@@ -40,12 +40,12 @@ function getFresnelMat({rimHex = 0x0088ff, facingHex = 0x000000} = {}) {
     }
     `;
     const fresnelMat = new THREE.ShaderMaterial({
-    uniforms: uniforms,
-    vertexShader: vs,
-    fragmentShader: fs,
-    transparent: true,
-    blending: THREE.AdditiveBlending,
-    // wireframe: true,
+        uniforms: uniforms,
+        vertexShader: vs,
+        fragmentShader: fs,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        // wireframe: true,
     });
     return fresnelMat;
 }
