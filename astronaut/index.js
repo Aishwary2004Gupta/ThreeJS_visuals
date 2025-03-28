@@ -34,7 +34,7 @@ function initScene(data) {
     const mesh = new THREE.Mesh(geo, material);
     mesh.scale.setScalar(1.7);
     scene.add(mesh);
-    
+
 
     //lens plane
     const lensGeo = new THREE.PlaneGeometry(10, 10, 10, 10);
