@@ -14,7 +14,7 @@ document.body.appendChild(renderer.domElement);
 
 //earthGroup
 const earthGroup = new THREE.Group();
-earthGroup.rotation.z = -23.4 * Math.PI /180
+earthGroup.rotation.z = -23.4 * Math.PI / 180
 scene.add(earthGroup);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -22,7 +22,7 @@ const controls = new OrbitControls(camera, renderer.domElement);
 const detail = 11;
 const loader = new THREE.TextureLoader();
 const geometry = new THREE.IcosahedronGeometry(1, detail); //making it smoother (edges)
-const material = new THREE.MeshStandardMaterial({ 
+const material = new THREE.MeshStandardMaterial({
     map: loader.load("../textures/earthmap1k.jpg")
 });
 
@@ -73,14 +73,14 @@ function animate() {
     lightMesh.rotation.y += 0.002;
     earthMesh.rotation.y += 0.002;
     cloudMesh.rotation.y += 0.0024;
-    glowMesh.rotation.y += 0.002;   
+    glowMesh.rotation.y += 0.002;
     renderer.render(scene, camera);
     controls.update();
 }
 
 animate();
 
-function handleWindowResize () {
+function handleWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
