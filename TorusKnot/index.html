@@ -41,7 +41,7 @@
 
         // Load texture
         const textureLoader = new THREE.TextureLoader();
-        const texture = textureLoader.load('../assets/bronze.png', 
+        const texture = textureLoader.load('../assets/torus_knot.jpg', 
             () => console.log('Texture loaded successfully'), 
             undefined, 
             (err) => console.error('Failed to load texture:', err)
@@ -49,7 +49,11 @@
 
         // Create the TorusKnot geometry
         const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-        const material = new THREE.MeshStandardMaterial({ map: texture, metalness: 0.5, roughness: 0.5 });
+        const material = new THREE.MeshStandardMaterial({ 
+            map: texture, 
+            metalness: 1.0, // Increase metalness for a metallic look
+            roughness: 0.2  // Decrease roughness for a shinier appearance
+        });
         const torusKnot = new THREE.Mesh(geometry, material);
         scene.add(torusKnot);
 
