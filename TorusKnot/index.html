@@ -51,18 +51,19 @@
         const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
         const material = new THREE.MeshStandardMaterial({ 
             map: texture, 
-            metalness: 7.0, // Increase metalness for a metallic look
-            roughness: 0.1  // Decrease roughness for a shinier appearance
+            smoothness: 5, // Adjust smoothness for better lighting effects
+            metalness: 1.0, // Increase metalness for a metallic look
+            roughness: 0.2  // Decrease roughness for a shinier appearance
         });
         const torusKnot = new THREE.Mesh(geometry, material);
         scene.add(torusKnot);
 
         // Add lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.0); // Increase intensity for better visibility
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         scene.add(ambientLight);
 
-        const pointLight = new THREE.PointLight(0xffffff, 1.5); // Increase intensity
-        pointLight.position.set(3, 3, 3); // Adjust position for better illumination
+        const pointLight = new THREE.PointLight(0xffffff, 900);
+        pointLight.position.set(5, 5, 5);
         scene.add(pointLight);
 
         // Animation loop
