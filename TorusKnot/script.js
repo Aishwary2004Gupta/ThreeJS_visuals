@@ -31,6 +31,8 @@ const material = new THREE.MeshStandardMaterial({
     metalness: 2.00, // Increase metalness for a metallic look
     roughness: 0.00  // Decrease roughness for a shinier appearance
 });
+material.color = new THREE.Color(0x636363);
+material.side = THREE.DoubleSide;
 const torusKnot = new THREE.Mesh(geometry, material);
 scene.add(torusKnot);
 
