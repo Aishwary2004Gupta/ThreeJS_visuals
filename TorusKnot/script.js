@@ -28,7 +28,7 @@ const texture = textureLoader.load('../assets/metal.jpg',
 const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
 const material = new THREE.MeshStandardMaterial({ 
     map: texture, 
-    metalness: 2.00, // Increase metalness for a metallic look
+    // metalness: 2.00, // Increase metalness for a metallic look
     roughness: 0.00  // Decrease roughness for a shinier appearance
 });
 material.color = new THREE.Color(0x636363);
