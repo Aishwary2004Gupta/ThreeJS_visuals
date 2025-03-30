@@ -1,6 +1,5 @@
-import * as THREE from 'https://unpkg.com/three@0.162.0/build/three.module.js';
-// import { OrbitControls } from 'https://unpkg.com/three@0.162.0/examples/jsm/controls/OrbitControls.js';
-
+import * as THREE from "three";
+import { OrbitControls } from "jsm/controls/OrbitControls.js";
 // Create the scene
 const scene = new THREE.Scene();
 
@@ -14,8 +13,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Enable OrbitControls
-// const controls = new OrbitControls(camera, renderer.domElement);
-// controls.enableDamping = true; // Smooth camera movement
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Smooth camera movement
 
 // Load texture
 const textureLoader = new THREE.TextureLoader();
@@ -52,7 +51,7 @@ function animate() {
     torusKnot.rotation.y += 0.01;
 
     // Update controls
-    // controls.update();
+    controls.update();
 
     renderer.render(scene, camera);
 }
