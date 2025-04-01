@@ -35,7 +35,7 @@ material.color = new THREE.Color(0x636363);
 material.side = THREE.DoubleSide;
 const torusKnot = new THREE.Mesh(geometry, material);
 scene.add(torusKnot);
-
+ 
 // Add lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
