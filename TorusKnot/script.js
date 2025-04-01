@@ -18,16 +18,16 @@ controls.enableDamping = true; // Smooth camera movement
 
 // Load texture
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('../assets/metal.jpg', 
-    () => console.log('Texture loaded successfully'), 
-    undefined, 
+const texture = textureLoader.load('../assets/metal.jpg',
+    () => console.log('Texture loaded successfully'),
+    undefined,
     (err) => console.error('Failed to load texture:', err)
 );
 
 // Create the TorusKnot geometry
 const geometry = new THREE.TorusKnotGeometry(1, 0.4, 100, 16);
-const material = new THREE.MeshStandardMaterial({ 
-    map: texture, 
+const material = new THREE.MeshStandardMaterial({
+    map: texture,
     // metalness: 2.00, // Increase metalness for a metallic look
     roughness: 0.00  // Decrease roughness for a shinier appearance
 });
@@ -43,7 +43,7 @@ scene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 9900);
 pointLight.position.set(5, 5, 5);
 scene.add(pointLight);
- 
+
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
