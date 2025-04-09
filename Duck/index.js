@@ -22,7 +22,7 @@ function initScene(data) {
     const { geo } = data;
     geo.center();
     const material = new THREE.MeshMatcapMaterial({
-        matcap: texLoader.load("../assets/1bb014aca57b40224f097a9b27afa00455321582.jpeg"),
+        matcap: texLoader.load("../assets/yellow.jpeg"),
     });
 
     const mesh = new THREE.Mesh(geo, material);
