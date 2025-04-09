@@ -22,11 +22,11 @@ function initScene(data) {
     const { geo } = data;
     geo.center();
     const material = new THREE.MeshMatcapMaterial({
-        matcap: texLoader.load("../assets/yellow.jpeg"),
+        matcap: texLoader.load("../assets/yellow2.jpeg"),
     });
 
     const mesh = new THREE.Mesh(geo, material);
-    mesh.scale.setScalar(20);
+    mesh.scale.setScalar(15);
     scene.add(mesh);
 
     //lens plane
