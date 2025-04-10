@@ -26,7 +26,7 @@ function initScene(data) {
     });
 
     const mesh = new THREE.Mesh(geo, material);
-    mesh.scale.setScalar(5);
+    mesh.scale.setScalar(29);
     scene.add(mesh);
 
     //lens plane
@@ -68,7 +68,7 @@ const sceneData = { geo: null };
 const manager = new THREE.LoadingManager();
 manager.onLoad = () => initScene(sceneData);
 const loader = new OBJLoader(manager);
-loader.load("../assets/LP_Sneaker3.obj", (obj) => {
+loader.load("../assets/horse.obj", (obj) => {
     let geo;
     obj.traverse((child) => {
         if (child instanceof THREE.Mesh) {
