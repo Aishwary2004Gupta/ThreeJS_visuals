@@ -21,6 +21,7 @@ function initScene(data) {
     //hand model
     const { geo } = data;
     geo.center();
+    geo.rotateX(-Math.PI / 2); // Rotate the geometry to make it horizontal
     const material = new THREE.MeshMatcapMaterial({
         matcap: texLoader.load("../assets/bronze.png"),
     });
