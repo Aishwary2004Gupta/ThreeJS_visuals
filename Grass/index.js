@@ -288,7 +288,7 @@ function gameMove() {
   ctx.textAlign="center"
 ctx.strokeStyle="white"
  ctx.font="40px Calibri"
- ctx.strokeText("Use the mouse to push the grass around",can.width/2,100)
+ ctx.strokeText("Use the mouse to push the grass around",can.width/2,400)
   for (i = 0; i < grass.length; i++) {
   grass[i].show() 
   for(j = 0; j < substeps; j++) {
