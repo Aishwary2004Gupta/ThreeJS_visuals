@@ -278,7 +278,7 @@ function gameMake() {
   for (i = 0; i < num; i++) {
     var variety = 0.06
     var ang = -Math.PI/2 + randFrom(-variety,variety)
-    grass.push(new Blade((i+1)/(num+1)*can.width, can.height, {x: Math.cos(ang), y: Math.sin(ang)}, randFrom(80,90), 0.3, 0.3))
+    grass.push(new Blade((i+1)/(num+1)*can.width, can.height, {x: Math.cos(ang), y: Math.sin(ang)}, randFrom(80,0), 0.3, 0.3))
   }
 }
 function gameMove() {
