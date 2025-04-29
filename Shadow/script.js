@@ -1,5 +1,4 @@
 var scene = new THREE.Scene();
-
 let aspect = window.innerWidth / window.innerHeight;
 let camera_distance = 8;
 const camera = new THREE.OrthographicCamera(
