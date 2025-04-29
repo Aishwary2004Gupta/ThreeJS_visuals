@@ -11,7 +11,8 @@ const camera = new THREE.OrthographicCamera(
   1000
 );
 
-camera.position.set(-0, -10, 5);
+// Update camera position
+camera.position.set(0, -8, 8);
 camera.lookAt(0, 0, 0);
 
 var renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -43,10 +44,13 @@ hit.name = "hit";
 scene.add(hit);
 
 //////////////////////////////////////////////
-var geometry = new THREE.PlaneGeometry(15, 15, 100, 100);
+var geometry = new THREE.PlaneGeometry(10, 10, 100, 100);
 let shader_material = new THREE.ShaderMaterial({
   uniforms: {
-    uTexture: { type: "t", value: new THREE.TextureLoader().load(texture) },
+    uTexture: { 
+      type: "t", 
+      value: new THREE.TextureLoader().load('./images/pattern.png') 
+    },
     uDisplacement: { value: new THREE.Vector3(0, 0, 0) }
   },
 
@@ -104,7 +108,7 @@ let shader_material_shadow = new THREE.ShaderMaterial({
   uniforms: {
     uTexture: {
       type: "t",
-      value: new THREE.TextureLoader().load(shadow_texture)
+      value: new THREE.TextureLoader().load('./images/shadow.png')
     },
     uDisplacement: { value: new THREE.Vector3(0, 0, 0) }
   },
@@ -150,8 +154,10 @@ let shader_material_shadow = new THREE.ShaderMaterial({
   side: THREE.DoubleSide
 });
 
+// Adjust shadow plane position
 var plane_shadow = new THREE.Mesh(geometry, shader_material_shadow);
 plane_shadow.rotation.z = Math.PI / 4;
+plane_shadow.position.z = -0.01; // Position slightly below main plane
 scene.add(plane_shadow);
 
 //////////////////////////////////////////////////
