@@ -56,8 +56,9 @@ float fbm(vec2 p) {
   float sum = 0.0;
   float amp = 0.5;
   float freq = 1.0;
-  for(int i = 0; i < 4; i++) {
-    sum += amp * noise(p * freq);
+  // Reduce octaves for smoother distortion
+  for(int i = 0; i < 3; i++) {
+    sum += (amp * noise(p * freq) - 0.5) * 2.0; // Center the noise around 0
     freq *= 2.0;
     amp *= 0.5;
   }
@@ -69,15 +70,22 @@ void main() {
   vec2 center = uv - 0.5;
   center.x *= u_resolution.x / u_resolution.y;
 
-  // Add noise distortion
-  center += vec2(fbm(center + u_time * 0.1)) * u_distortion;
-
   // Add mouse influence
   vec2 mousePos = u_mouse / u_resolution.xy - 0.5;
   float mouseDist = length(center - mousePos) * 2.0;
-  
-  float angle = atan(center.y, center.x);
-  float radius = length(center);
+
+  // Improved distortion that maintains center focus
+  float distortionScale = 0.15; // Reduce the distortion scale
+  vec2 distortedCenter = center;
+  vec2 fbmVal = vec2(
+    fbm(center + vec2(u_time * 0.1, 0.0)),
+    fbm(center + vec2(0.0, u_time * 0.1))
+  );
+  distortedCenter += fbmVal * u_distortion * distortionScale * (1.0 - length(center));
+
+  // Use distorted coordinates for the effect
+  float angle = atan(distortedCenter.y, distortedCenter.x);
+  float radius = length(distortedCenter);
 
   float swirl = sin(angle * u_arms - u_time * u_speed) * 0.3 + 0.5;
   float glow = exp(-10.0 * abs(radius - swirl));
@@ -111,13 +119,15 @@ let gl = canvas.getContext("webgl");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Compile shader
+// Compile shader with better error handling
 function compileShader(type, source) {
   const shader = gl.createShader(type);
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
+  
   if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.error(gl.getShaderInfoLog(shader));
+    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
     return null;
   }
   return shader;
@@ -126,10 +136,24 @@ function compileShader(type, source) {
 const vertShader = compileShader(gl.VERTEX_SHADER, document.getElementById("vertShader").textContent);
 const fragShader = compileShader(gl.FRAGMENT_SHADER, document.getElementById("fragShader").textContent);
 
+if (!vertShader || !fragShader) {
+  console.error('Shader compilation failed');
+  throw new Error('Shader compilation failed');
+}
+
 const program = gl.createProgram();
 gl.attachShader(program, vertShader);
 gl.attachShader(program, fragShader);
 gl.linkProgram(program);
+
+if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+  console.error('Program link error:', gl.getProgramInfoLog(program));
+  gl.deleteProgram(program);
+  gl.deleteShader(vertShader);
+  gl.deleteShader(fragShader);
+  throw new Error('Program link failed');
+}
+
 gl.useProgram(program);
 
 // Fullscreen quad
