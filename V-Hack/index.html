@@ -15,6 +15,11 @@
       border-radius: 5px;
       color: white;
     }
+    .effect-controls {
+      margin-top: 10px;
+      border-top: 1px solid #333;
+      padding-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -22,6 +27,11 @@
   <label>Speed: <input type="range" id="speed" min="0" max="3" step="0.1" value="1.5"></label><br>
   <label>Arms: <input type="range" id="arms" min="1" max="12" step="1" value="6"></label><br>
   <label>Color: <input type="color" id="color" value="#ff8800"></label>
+  <div class="effect-controls">
+    <label>Bloom: <input type="range" id="bloom" min="0" max="2" step="0.1" value="0.5"></label><br>
+    <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.1"></label><br>
+    <label>Distortion: <input type="range" id="distortion" min="0" max="1" step="0.1" value="0.2"></label>
+  </div>
 </div>
 <canvas id="glcanvas"></canvas>
 <script type="x-shader/x-fragment" id="fragShader">
@@ -32,13 +42,35 @@ uniform vec2 u_mouse;
 uniform vec3 u_color;
 uniform float u_speed;
 uniform float u_arms;
+uniform float u_bloom;
+uniform float u_noise;
+uniform float u_distortion;
 
 #define PI 3.14159265359
+
+float noise(vec2 p) {
+  return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+float fbm(vec2 p) {
+  float sum = 0.0;
+  float amp = 0.5;
+  float freq = 1.0;
+  for(int i = 0; i < 4; i++) {
+    sum += amp * noise(p * freq);
+    freq *= 2.0;
+    amp *= 0.5;
+  }
+  return sum;
+}
 
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution.xy;
   vec2 center = uv - 0.5;
   center.x *= u_resolution.x / u_resolution.y;
+
+  // Add noise distortion
+  center += vec2(fbm(center + u_time * 0.1)) * u_distortion;
 
   // Add mouse influence
   vec2 mousePos = u_mouse / u_resolution.xy - 0.5;
@@ -57,6 +89,13 @@ void main() {
   color += u_color * glow;
   color += vec3(1.0) * (glow * 0.5);
 
+  // Add bloom effect
+  float bloom = u_bloom * glow * 2.0;
+  color += color * bloom;
+  
+  // Add noise
+  color += vec3(noise(uv * 100.0 + u_time)) * u_noise * 0.1;
+
   gl_FragColor = vec4(color, 1.0);
 }
 </script>
@@ -68,7 +107,7 @@ void main() {
 </script>
 <script>
 const canvas = document.getElementById("glcanvas");
-const gl = canvas.getContext("webgl");
+let gl = canvas.getContext("webgl");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
@@ -117,6 +156,9 @@ const uMouse = gl.getUniformLocation(program, "u_mouse");
 const uColor = gl.getUniformLocation(program, "u_color");
 const uSpeed = gl.getUniformLocation(program, "u_speed");
 const uArms = gl.getUniformLocation(program, "u_arms");
+const uBloom = gl.getUniformLocation(program, "u_bloom");
+const uNoise = gl.getUniformLocation(program, "u_noise");
+const uDistortion = gl.getUniformLocation(program, "u_distortion");
 
 // Mouse tracking
 let mouseX = 0, mouseY = 0;
@@ -136,6 +178,9 @@ function hexToRGB(hex) {
 let speed = 1.5;
 let arms = 6;
 let color = hexToRGB('#ff8800');
+let bloom = 0.5;
+let noiseAmount = 0.1;
+let distortion = 0.2;
 
 document.getElementById('speed').addEventListener('input', (e) => {
   speed = parseFloat(e.target.value);
@@ -149,6 +194,18 @@ document.getElementById('color').addEventListener('input', (e) => {
   color = hexToRGB(e.target.value);
 });
 
+document.getElementById('bloom').addEventListener('input', (e) => {
+  bloom = parseFloat(e.target.value);
+});
+
+document.getElementById('noise').addEventListener('input', (e) => {
+  noiseAmount = parseFloat(e.target.value);
+});
+
+document.getElementById('distortion').addEventListener('input', (e) => {
+  distortion = parseFloat(e.target.value);
+});
+
 function render(t) {
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -158,6 +215,9 @@ function render(t) {
   gl.uniform3f(uColor, color[0], color[1], color[2]);
   gl.uniform1f(uSpeed, speed);
   gl.uniform1f(uArms, arms);
+  gl.uniform1f(uBloom, bloom);
+  gl.uniform1f(uNoise, noiseAmount);
+  gl.uniform1f(uDistortion, distortion);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
   requestAnimationFrame(render);
 }
@@ -168,6 +228,31 @@ window.addEventListener('resize', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+
+// Add WebGL context lost handling
+canvas.addEventListener('webglcontextlost', (e) => {
+  e.preventDefault();
+}, false);
+
+canvas.addEventListener('webglcontextrestored', () => {
+  // Reinitialize WebGL context
+  initWebGL();
+}, false);
+
+function initWebGL() {
+  // Move initialization code here
+  gl = canvas.getContext('webgl', {
+    alpha: false,
+    depth: false,
+    stencil: false,
+    antialias: false,
+    preserveDrawingBuffer: false
+  });
+  // ... rest of initialization code
+}
+
+// Call initWebGL initially
+initWebGL();
 </script>
 </body>
 </html>
