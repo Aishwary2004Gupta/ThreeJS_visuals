@@ -32,6 +32,10 @@
     <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.1"></label><br>
     <label>Distortion: <input type="range" id="distortion" min="0" max="1" step="0.1" value="0.2"></label>
   </div>
+  <div class="effect-controls">
+    <label>Orbital Speed: <input type="range" id="orbital-speed" min="0" max="2" step="0.1" value="0.5"></label><br>
+    <label>Orbital Radius: <input type="range" id="orbital-radius" min="0" max="1" step="0.1" value="0.3"></label>
+  </div>
 </div>
 <canvas id="glcanvas"></canvas>
 <script type="x-shader/x-fragment" id="fragShader">
@@ -45,6 +49,8 @@ uniform float u_arms;
 uniform float u_bloom;
 uniform float u_noise;
 uniform float u_distortion;
+uniform float u_orbitalSpeed;
+uniform float u_orbitalRadius;
 
 #define PI 3.14159265359
 
@@ -73,6 +79,14 @@ void main() {
   // Add mouse influence
   vec2 mousePos = u_mouse / u_resolution.xy - 0.5;
   float mouseDist = length(center - mousePos) * 2.0;
+
+  // Add orbital movement
+  vec2 orbit = vec2(
+    cos(u_time * u_orbitalSpeed),
+    sin(u_time * u_orbitalSpeed)
+  ) * u_orbitalRadius;
+  
+  center -= orbit;
 
   // Improved distortion that maintains center focus
   float distortionScale = 0.15; // Reduce the distortion scale
@@ -183,6 +197,8 @@ const uArms = gl.getUniformLocation(program, "u_arms");
 const uBloom = gl.getUniformLocation(program, "u_bloom");
 const uNoise = gl.getUniformLocation(program, "u_noise");
 const uDistortion = gl.getUniformLocation(program, "u_distortion");
+const uOrbitalSpeed = gl.getUniformLocation(program, "u_orbitalSpeed");
+const uOrbitalRadius = gl.getUniformLocation(program, "u_orbitalRadius");
 
 // Mouse tracking
 let mouseX = 0, mouseY = 0;
@@ -205,6 +221,8 @@ let color = hexToRGB('#ff8800');
 let bloom = 0.5;
 let noiseAmount = 0.1;
 let distortion = 0.2;
+let orbitalSpeed = 0.5;
+let orbitalRadius = 0.3;
 
 document.getElementById('speed').addEventListener('input', (e) => {
   speed = parseFloat(e.target.value);
@@ -230,6 +248,14 @@ document.getElementById('distortion').addEventListener('input', (e) => {
   distortion = parseFloat(e.target.value);
 });
 
+document.getElementById('orbital-speed').addEventListener('input', (e) => {
+  orbitalSpeed = parseFloat(e.target.value);
+});
+
+document.getElementById('orbital-radius').addEventListener('input', (e) => {
+  orbitalRadius = parseFloat(e.target.value);
+});
+
 function render(t) {
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clear(gl.COLOR_BUFFER_BIT);
@@ -242,6 +268,8 @@ function render(t) {
   gl.uniform1f(uBloom, bloom);
   gl.uniform1f(uNoise, noiseAmount);
   gl.uniform1f(uDistortion, distortion);
+  gl.uniform1f(uOrbitalSpeed, orbitalSpeed);
+  gl.uniform1f(uOrbitalRadius, orbitalRadius);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
   requestAnimationFrame(render);
 }
