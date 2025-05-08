@@ -41,6 +41,7 @@ void main() {
 <script type="x-shader/x-vertex" id="vertShader">
 attribute vec4 a_position;
 varying vec3 v_pos;
+uniform float u_aspect;
 
 // Simple perspective projection
 mat4 perspective(float fov, float aspect, float near, float far) {
@@ -56,19 +57,18 @@ mat4 perspective(float fov, float aspect, float near, float far) {
 void main() {
     // Map a_position.xy from [-1,1] to a 3D disk
     float angle = a_position.x * 3.14159;
-    float radius = a_position.y * 0.8 + 1.0;
+    float radius = a_position.y * 0.5 + 0.7;
     float x = cos(angle) * radius;
     float y = sin(angle) * radius;
-    float z = sin(angle * 2.0 + y * 2.0) * 0.5;
+    float z = sin(angle * 2.0 + y * 2.0) * 0.2;
     v_pos = vec3(x, y, z);
 
     // Perspective projection
     float fov = radians(60.0);
-    float aspect = 1.0;
     float near = 0.1;
     float far = 10.0;
-    mat4 proj = perspective(fov, aspect, near, far);
-    vec4 pos3d = vec4(x, y, z - 2.5, 1.0); // Move back for camera
+    mat4 proj = perspective(fov, u_aspect, near, far);
+    vec4 pos3d = vec4(x, y, z - 2.0, 1.0); // Move back for camera
     gl_Position = proj * pos3d;
 }
 </script>
@@ -117,12 +117,14 @@ gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
 // Uniforms
 const uTime = gl.getUniformLocation(program, "u_time");
 const uRes = gl.getUniformLocation(program, "u_resolution");
+const uAspect = gl.getUniformLocation(program, "u_aspect");
 
 function render(t) {
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.clear(gl.COLOR_BUFFER_BIT);
   gl.uniform1f(uTime, t * 0.001);
   gl.uniform2f(uRes, canvas.width, canvas.height);
+  gl.uniform1f(uAspect, canvas.width / canvas.height);
   gl.drawArrays(gl.TRIANGLES, 0, 6);
   requestAnimationFrame(render);
 }
