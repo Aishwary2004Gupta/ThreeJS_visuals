@@ -14,6 +14,7 @@
 precision highp float;
 uniform float u_time;
 uniform vec2 u_resolution;
+varying vec3 v_pos;
 
 #define PI 3.14159265359
 
@@ -28,17 +29,47 @@ void main() {
   float swirl = sin(angle * 6.0 - u_time * 1.5) * 0.3 + 0.5;
   float glow = exp(-10.0 * abs(radius - swirl));
 
-  vec3 color = vec3(0.0); // Start with black
-  color += vec3(1.0, 0.5, 0.0) * glow; // Orange
-  color += vec3(1.0) * (glow * 0.5);   // Add white glow
+  // Use v_pos for a 3D color effect
+  vec3 color = vec3(0.0);
+  color += vec3(1.0, 0.5, 0.0) * glow;
+  color += vec3(1.0) * (glow * 0.5);
+  color *= 0.7 + 0.3 * normalize(v_pos + 1.0);
 
   gl_FragColor = vec4(color, 1.0);
 }
 </script>
 <script type="x-shader/x-vertex" id="vertShader">
 attribute vec4 a_position;
+varying vec3 v_pos;
+
+// Simple perspective projection
+mat4 perspective(float fov, float aspect, float near, float far) {
+    float f = 1.0 / tan(fov / 2.0);
+    return mat4(
+        f / aspect, 0, 0, 0,
+        0, f, 0, 0,
+        0, 0, (far + near) / (near - far), -1,
+        0, 0, (2.0 * far * near) / (near - far), 0
+    );
+}
+
 void main() {
-  gl_Position = a_position;
+    // Map a_position.xy from [-1,1] to a 3D disk
+    float angle = a_position.x * 3.14159;
+    float radius = a_position.y * 0.8 + 1.0;
+    float x = cos(angle) * radius;
+    float y = sin(angle) * radius;
+    float z = sin(angle * 2.0 + y * 2.0) * 0.5;
+    v_pos = vec3(x, y, z);
+
+    // Perspective projection
+    float fov = radians(60.0);
+    float aspect = 1.0;
+    float near = 0.1;
+    float far = 10.0;
+    mat4 proj = perspective(fov, aspect, near, far);
+    vec4 pos3d = vec4(x, y, z - 2.5, 1.0); // Move back for camera
+    gl_Position = proj * pos3d;
 }
 </script>
 <script>
