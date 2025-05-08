@@ -119,11 +119,19 @@ void main() {
 <script type="x-shader/x-vertex" id="vertShader">
 varying vec2 vUv;
 varying vec3 vPosition;
+varying vec3 vNormal;
 
 void main() {
     vUv = uv;
     vPosition = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    vNormal = normalize(normalMatrix * normal);
+    
+    // Add radial displacement
+    vec3 pos = position;
+    float displacement = sin(position.x * 10.0 + position.y * 10.0) * 0.1;
+    pos += normal * displacement;
+    
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
 }
 </script>
 <script>
@@ -170,24 +178,44 @@ const shaderMaterial = new THREE.ShaderMaterial({
     side: THREE.DoubleSide
 });
 
-// Create multiple planes for 3D effect
+// Replace the plane creation code with this spherical arrangement
 const planes = [];
-const numPlanes = 8;
-for(let i = 0; i < numPlanes; i++) {
-    const angle = (i / numPlanes) * Math.PI * 2;
-    const radius = 0.5;
+const numRings = 6;
+const planesPerRing = 8;
+const radius = 0.8;
+
+for(let ring = 0; ring < numRings; ring++) {
+    const phi = (ring / (numRings - 1)) * Math.PI;
     
-    const geometry = new THREE.PlaneGeometry(2, 2, 32, 32);
-    const material = shaderMaterial.clone();
-    const plane = new THREE.Mesh(geometry, material);
-    
-    plane.position.x = Math.cos(angle) * radius;
-    plane.position.z = Math.sin(angle) * radius;
-    plane.rotation.y = -angle;
-    
-    planes.push(plane);
-    scene.add(plane);
+    for(let i = 0; i < planesPerRing; i++) {
+        const theta = (i / planesPerRing) * Math.PI * 2;
+        
+        const geometry = new THREE.PlaneGeometry(1, 1, 32, 32);
+        const material = shaderMaterial.clone();
+        const plane = new THREE.Mesh(geometry, material);
+        
+        // Calculate spherical coordinates
+        plane.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        plane.position.y = radius * Math.cos(phi);
+        plane.position.z = radius * Math.sin(phi) * Math.sin(theta);
+        
+        // Orient planes to face center
+        plane.lookAt(0, 0, 0);
+        
+        // Scale planes based on position
+        const scale = 0.4 * (1.0 - Math.abs(ring - numRings/2) / numRings);
+        plane.scale.set(scale, scale, scale);
+        
+        planes.push(plane);
+        scene.add(plane);
+    }
 }
+
+// Modify camera settings
+camera.position.z = 2;
+camera.position.y = 1;
+controls.minDistance = 1.5;
+controls.maxDistance = 4;
 
 // Mouse tracking with normalized coordinates
 let mouseX = 0, mouseY = 0;
