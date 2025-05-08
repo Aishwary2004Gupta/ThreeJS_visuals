@@ -32,7 +32,7 @@
   <div class="effect-controls">
     <label>Bloom: <input type="range" id="bloom" min="0" max="2" step="0.1" value="0.5"></label><br>
     <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.1"></label><br>
-    <label>Distortion: <input type="range" id="distortion" min="0" max="1" step="0.1" value="0.2"></label>
+    <label>Distortion: <input type="range" id="distortion" min="0" max="1" step="0.1" value="0.0"></label>
   </div>
 </div>
 <canvas id="glcanvas"></canvas>
@@ -57,16 +57,15 @@ float noise(vec2 p) {
 }
 
 float fbm(vec2 p) {
-  float sum = 0.0;
-  float amp = 0.5;
-  float freq = 1.0;
-  // Reduce octaves for smoother distortion
-  for(int i = 0; i < 3; i++) {
-    sum += (amp * noise(p * freq) - 0.5) * 2.0; // Center the noise around 0
-    freq *= 2.0;
-    amp *= 0.5;
-  }
-  return sum;
+    float sum = 0.0;
+    float amp = 1.0;  // increased from 0.5
+    float freq = 1.0;
+    for(int i = 0; i < 4; i++) {  // increased octaves
+        sum += amp * noise(p * freq);
+        freq *= 2.1;  // slightly modified frequency multiplier
+        amp *= 0.5;
+    }
+    return sum * 2.0 - 1.0;  // normalize to [-1, 1] range
 }
 
 varying vec3 vPosition;
@@ -76,7 +75,7 @@ void main() {
     vec2 uv = vUv;
     vec3 pos = vPosition;
     
-    // Create 3D space distortion
+    // Enhanced 3D space distortion
     vec3 center3D = pos;
     float dist3D = length(center3D);
     
@@ -84,18 +83,23 @@ void main() {
     float theta = atan(center3D.y, center3D.x);
     float phi = acos(center3D.z / (dist3D + 0.0001));
     
-    // 3D distortion
+    // Enhanced 3D distortion
+    float timeScale = u_time * 0.2;  // slowed down time
     vec3 fbmVal3D = vec3(
-        fbm(pos.xy + vec2(u_time * 0.1, 0.0)),
-        fbm(pos.yz + vec2(u_time * 0.15, 0.0)),
-        fbm(pos.xz + vec2(u_time * 0.12, 0.0))
+        fbm(pos.xy + vec2(timeScale, 0.0)),
+        fbm(pos.yz + vec2(timeScale * 1.1, 0.0)),
+        fbm(pos.xz + vec2(timeScale * 0.9, 0.0))
     );
     
-    vec3 distortedPos = pos + fbmVal3D * u_distortion * 0.3;
+    vec3 distortedPos = pos + fbmVal3D * u_distortion * 0.5;  // increased effect
     
-    // 3D swirl effect
+    // Apply distortion to the coordinates used for the swirl
+    theta += fbmVal3D.x * u_distortion * 2.0;
+    phi += fbmVal3D.y * u_distortion * 2.0;
+    
+    // 3D swirl effect with distortion
     float swirl = sin(theta * u_arms + phi * 2.0 - u_time * u_speed) * 0.3 + 0.5;
-    float glow = exp(-8.0 * abs(dist3D - swirl));
+    float glow = exp(-8.0 * abs(length(distortedPos) - swirl));  // use distorted position
     
     // Add depth-based effects
     glow *= exp(-dist3D * 2.0);
@@ -207,7 +211,7 @@ let arms = 6;
 let color = hexToRGB('#ff8800');
 let bloom = 0.5;
 let noiseAmount = 0.1;
-let distortion = 0.2;
+let distortion = 0.0;
 
 document.getElementById('speed').addEventListener('input', (e) => {
   speed = parseFloat(e.target.value);
