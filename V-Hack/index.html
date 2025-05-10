@@ -83,37 +83,43 @@ void main() {
     float theta = atan(center3D.y, center3D.x);
     float phi = acos(center3D.z / (dist3D + 0.0001));
     
-    // Enhanced 3D distortion
-    float timeScale = u_time * 0.2;  // slowed down time
+    // Enhanced 3D distortion with more dynamic movement
+    float timeScale = u_time * 0.15;
     vec3 fbmVal3D = vec3(
-        fbm(pos.xy + vec2(timeScale, 0.0)),
-        fbm(pos.yz + vec2(timeScale * 1.1, 0.0)),
-        fbm(pos.xz + vec2(timeScale * 0.9, 0.0))
+        fbm(pos.xy + vec2(timeScale, pos.z)),
+        fbm(pos.yz + vec2(timeScale * 1.2, pos.x)),
+        fbm(pos.xz + vec2(timeScale * 0.8, pos.y))
     );
     
-    vec3 distortedPos = pos + fbmVal3D * u_distortion * 0.5;  // increased effect
+    vec3 distortedPos = pos + fbmVal3D * u_distortion * 0.8;
     
-    // Apply distortion to the coordinates used for the swirl
-    theta += fbmVal3D.x * u_distortion * 2.0;
+    // More dynamic swirl effect
+    theta += fbmVal3D.x * u_distortion * 3.0;
     phi += fbmVal3D.y * u_distortion * 2.0;
     
-    // 3D swirl effect with distortion
-    float swirl = sin(theta * u_arms + phi * 2.0 - u_time * u_speed) * 0.3 + 0.5;
-    float glow = exp(-8.0 * abs(length(distortedPos) - swirl));  // use distorted position
+    // Enhanced swirl pattern
+    float swirl = sin(theta * u_arms + phi * 2.5 - u_time * u_speed) * 0.4 + 0.6;
+    float glow = exp(-6.0 * abs(length(distortedPos) - swirl));
     
-    // Add depth-based effects
-    glow *= exp(-dist3D * 2.0);
+    // Enhanced color mixing
+    glow *= exp(-dist3D * 1.5);  // softer depth falloff
     
     vec3 color = vec3(0.0);
-    color += u_color * glow;
-    color += vec3(1.0) * (glow * 0.5);
+    color += u_color * glow * 1.5;  // increased base color intensity
     
-    // Add bloom and noise effects
-    color += vec3(noise(uv * 100.0 + u_time)) * u_noise * 0.1;
-    float bloom = u_bloom * glow * 2.0;
+    // Add subtle color variation
+    color += vec3(0.2, 0.1, 0.05) * glow * sin(u_time * 0.5);
+    
+    // Enhanced bloom and noise
+    vec3 noiseColor = vec3(noise(uv * 120.0 + u_time * 0.5));
+    color += noiseColor * u_noise * 0.15;
+    float bloom = u_bloom * glow * 2.5;
     color += color * bloom;
     
-    gl_FragColor = vec4(color, glow * 0.8);
+    // Add subtle pulsing
+    color *= 1.0 + 0.1 * sin(u_time * 0.8);
+    
+    gl_FragColor = vec4(color, glow);
 }  
 </script>
 <script type="x-shader/x-vertex" id="vertShader">
