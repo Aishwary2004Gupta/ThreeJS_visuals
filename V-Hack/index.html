@@ -126,11 +126,9 @@ float raymarch(vec3 ro, vec3 rd) {
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
     
-    // Fixed camera ray setup
-    vec3 ro = vec3(0.0, 0.0, 3.0);  // Fixed camera position
-    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));  // Simple ray direction
+    vec3 ro = vec3(0.0, 0.0, 3.0);
+    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));
     
-    // Transform ray by view matrix
     mat4 viewMatrix = inverse(u_viewMatrix);
     ro = (viewMatrix * vec4(ro, 1.0)).xyz;
     rd = (viewMatrix * vec4(rd, 0.0)).xyz;
@@ -139,7 +137,6 @@ void main() {
     vec3 p = ro + rd * d;
     vec3 n = getNormal(p);
     
-    // Enhanced visibility of the effect
     vec3 color = vec3(0.0);
     if(d < MAX_DIST) {
         vec3 baseColor = u_color;
@@ -148,20 +145,22 @@ void main() {
         
         float diff = max(dot(n, l), 0.0);
         vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 16.0);  // Reduced specular power
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);  // Softer fresnel
+        float spec = pow(max(dot(n, h), 0.0), 16.0);
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);
         
-        // Stronger base visibility
         float density = 1.0 - smoothstep(0.0, 1.0, length(p));
-        float glow = exp(-2.0 * abs(map(p)));  // Increased glow
+        float glow = exp(-2.0 * abs(map(p)));
         
-        // Enhanced visibility
-        color = baseColor * (diff * 0.7 + 0.3);  // Increased ambient
+        // Add white boundary
+        float edge = pow(1.0 - abs(dot(n, -rd)), 4.0);
+        vec3 edgeColor = vec3(1.0);  // White color
+        
+        color = baseColor * (diff * 0.7 + 0.3);
         color += vec3(1.0) * spec * 0.5;
         color += baseColor * fresnel * 0.8;
-        color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
+        color += baseColor * glow * density * (u_bloom * 3.0);
+        color += edgeColor * edge * 2.0;  // Add white edge glow
         
-        // Softer depth falloff
         color *= exp(-d * 0.1);
     }
     
