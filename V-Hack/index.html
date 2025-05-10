@@ -76,27 +76,27 @@ float sdf_sphere(vec3 p, float r) {
 }
 
 float map(vec3 p) {
-    // Create base sphere
-    float d = sdf_sphere(p, 1.0);
-    
-    // Add swirl effect
+    // Remove sphere constraint and create flowing shape
     float angle = atan(p.y, p.x);
     float radius = length(p.xz);
     float height = p.y;
     
-    // Create spiral density
-    float spiral = sin(angle * u_arms + radius * 3.0 - u_time * u_speed) * 0.5;
-    spiral += cos(height * 4.0 + u_time * u_speed * 0.5) * 0.3;
+    // Enhanced spiral pattern
+    float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
+    spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
     
-    // Apply distortion
+    // Create flowing boundaries
+    float shape = length(p) - (0.8 + spiral * 0.4);
+    
+    // Enhanced flowing distortion
     vec3 fbmVal = vec3(
         fbm(p.xy + vec2(u_time * 0.2)),
         fbm(p.yz + vec2(u_time * 0.15)),
         fbm(p.xz + vec2(u_time * 0.1))
     );
     
-    // Combine effects
-    return d + spiral * 0.3 + dot(fbmVal, vec3(0.3)) * u_distortion;
+    // Combine with more freedom
+    return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
 }
 
 vec3 getNormal(vec3 p) {
@@ -110,12 +110,14 @@ vec3 getNormal(vec3 p) {
 
 float raymarch(vec3 ro, vec3 rd) {
     float d0 = 0.0;
+    float glow = 0.0;
     
     for(int i = 0; i < MAX_STEPS; i++) {
         vec3 p = ro + rd * d0;
-        float ds = map(p);
-        d0 += ds * 0.5;
+        float ds = map(p) * 0.7; // Soften the surface for more fluid look
         if(ds < SURF_DIST || d0 > MAX_DIST) break;
+        d0 += ds;
+        glow += 0.1 / (1.0 + ds * ds * 8.0); // Add volumetric glow
     }
     
     return d0;
