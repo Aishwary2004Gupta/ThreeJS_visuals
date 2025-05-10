@@ -124,50 +124,43 @@ float raymarch(vec3 ro, vec3 rd) {
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
     
-    // Get camera position and direction from modelViewMatrix
-    mat4 camMat = inverse(u_viewMatrix);
-    vec3 ro = vec3(camMat[3].xyz);  // Camera position from view matrix
+    // Fixed camera ray setup
+    vec3 ro = vec3(0.0, 0.0, 3.0);  // Fixed camera position
+    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));  // Simple ray direction
     
-    // Calculate ray direction using camera matrix
-    vec3 rd = normalize(vec3(uv, -1.5));
-    rd = (vec4(rd, 0.0) * camMat).xyz;  // Transform ray direction to world space
+    // Transform ray by view matrix
+    mat4 viewMatrix = inverse(u_viewMatrix);
+    ro = (viewMatrix * vec4(ro, 1.0)).xyz;
+    rd = (viewMatrix * vec4(rd, 0.0)).xyz;
     
     float d = raymarch(ro, rd);
     vec3 p = ro + rd * d;
     vec3 n = getNormal(p);
     
-    // Volumetric lighting
+    // Enhanced visibility of the effect
     vec3 color = vec3(0.0);
     if(d < MAX_DIST) {
-        // Base color
         vec3 baseColor = u_color;
-        
-        // Lighting
-        vec3 lightPos = vec3(2.0, 2.0, 4.0);  // Adjusted light position
+        vec3 lightPos = vec3(2.0, 2.0, 4.0);
         vec3 l = normalize(lightPos - p);
         
-        // Diffuse
         float diff = max(dot(n, l), 0.0);
-        
-        // Specular
         vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 32.0);
+        float spec = pow(max(dot(n, h), 0.0), 16.0);  // Reduced specular power
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);  // Softer fresnel
         
-        // Fresnel
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 4.0);
+        // Stronger base visibility
+        float density = 1.0 - smoothstep(0.0, 1.0, length(p));
+        float glow = exp(-2.0 * abs(map(p)));  // Increased glow
         
-        // Volumetric glow
-        float density = 1.0 - smoothstep(0.0, 0.8, length(p));  // Tighter density falloff
-        float glow = exp(-3.0 * abs(map(p)));  // Adjusted glow intensity
+        // Enhanced visibility
+        color = baseColor * (diff * 0.7 + 0.3);  // Increased ambient
+        color += vec3(1.0) * spec * 0.5;
+        color += baseColor * fresnel * 0.8;
+        color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
         
-        // Combine lighting
-        color = baseColor * (diff * 0.6 + 0.4);  // Better diffuse balance
-        color += vec3(1.0) * spec * 0.7;  // Enhanced specular
-        color += baseColor * fresnel * 0.6;  // Enhanced fresnel
-        color += baseColor * glow * density * (u_bloom * 2.0);  // More responsive bloom
-        
-        // Add depth-based effects
-        color *= exp(-d * 0.15);  // Softer depth falloff
+        // Softer depth falloff
+        color *= exp(-d * 0.1);
     }
     
     gl_FragColor = vec4(color, 1.0);
