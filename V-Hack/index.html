@@ -189,7 +189,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(-10, -2, 5); // Modified initial camera position
+camera.position.set(0, 0, 0);
 
 const controls = new THREE.OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -201,10 +201,6 @@ controls.rotateSpeed = 0.5;
 controls.enableZoom = true;
 controls.enablePan = false;
 controls.target.set(0, 0, 0);
-
-// Set initial rotation
-controls.autoRotate = true;
-controls.autoRotateSpeed = 0.5;
 
 // Create shader material
 const shaderMaterial = new THREE.ShaderMaterial({
