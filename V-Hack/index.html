@@ -4,27 +4,62 @@
   <meta charset="UTF-8" />
   <title>Solar Vortex Shader</title>
   <style>
-    body { margin: 0; overflow: hidden; background: black; }
+    body { 
+      margin: 0; 
+      overflow: hidden; 
+      background: black;
+      background-image: 
+        linear-gradient(rgba(255, 136, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 136, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    }
     canvas { width: 100vw; height: 100vh; display: block; }
     #controls {
       position: fixed;
       top: 10px;
-      left: 10px;
-      background: rgba(0,0,0,0.7);
-      padding: 10px;
-      border-radius: 5px;
+      right: 10px;
+      background: rgba(0,0,0,0.85);
+      padding: 38px;
+      border-radius: 8px;
       color: white;
+      border: 1px solid rgba(255, 136, 0, 0.3);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+    }
+    #controls.visible {
+      transform: translateX(0);
     }
     .effect-controls {
       margin-top: 10px;
-      border-top: 1px solid #333;
+      border-top: 1px solid rgba(255, 136, 0, 0.3);
       padding-top: 10px;
+    }
+    #toggleControls {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.85);
+      color: white;
+      border: 1px solid rgba(255, 136, 0, 0.3);
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #toggleControls:hover {
+      background: rgba(255, 136, 0, 0.2);
+    }
+    input[type="range"] {
+      accent-color: #ff8800;
     }
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
+<button id="toggleControls">Controls ⚙️</button>
 <div id="controls">
   <label>Speed: <input type="range" id="speed" min="0" max="2" step="0.05" value="1.5"></label><br>
   <label>Arms: <input type="range" id="arms" min="5" max="14" step="1" value="6"></label><br>
@@ -76,26 +111,27 @@ float sdf_sphere(vec3 p, float r) {
 }
 
 float map(vec3 p) {
+    // Remove sphere constraint and create flowing shape
     float angle = atan(p.y, p.x);
     float radius = length(p.xz);
     float height = p.y;
     
-    // Enhanced 3D spiral pattern with depth variation
+    // Enhanced spiral pattern
     float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
-    spiral *= (1.0 + sin(p.z * 2.0 + u_time * 0.5) * 0.3); // Add z-axis variation
     spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
     
-    // Create more pronounced 3D boundaries
-    float shape = length(p) - (1.5 + spiral * 0.6); // Increased spiral influence
+    // Create flowing boundaries
+    float shape = length(p) - (1.5 + spiral * 0.4);
     
-    // Enhanced 3D flowing distortion
+    // Enhanced flowing distortion
     vec3 fbmVal = vec3(
         fbm(p.xy + vec2(u_time * 0.2)),
         fbm(p.yz + vec2(u_time * 0.15)),
         fbm(p.xz + vec2(u_time * 0.1))
     );
     
-    return shape + dot(fbmVal, vec3(0.6)) * u_distortion;
+    // Combine with more freedom
+    return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
 }
 
 vec3 getNormal(vec3 p) {
@@ -125,9 +161,9 @@ float raymarch(vec3 ro, vec3 rd) {
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
     
-    // Enhanced camera ray setup for better depth
-    vec3 ro = vec3(0.0, 0.0, 4.0);  // Moved camera back for more depth
-    vec3 rd = normalize(vec3(uv.x, uv.y, -1.5));  // Adjusted focal length
+    // Fixed camera ray setup
+    vec3 ro = vec3(0.0, 0.0, 3.0);  // Fixed camera position
+    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));  // Simple ray direction
     
     // Transform ray by view matrix
     mat4 viewMatrix = inverse(u_viewMatrix);
@@ -138,33 +174,31 @@ void main() {
     vec3 p = ro + rd * d;
     vec3 n = getNormal(p);
     
-    vec3 color = u_color * 0.2; // Increased base ambient color
+    // Always start with a base color instead of vec3(0.0)
+    vec3 color = u_color * 0.15; // Base ambient color
     
     if(d < MAX_DIST) {
         vec3 baseColor = u_color;
-        vec3 lightPos = vec3(2.0, 4.0, 4.0); // Adjusted light position for better depth
+        vec3 lightPos = vec3(2.0, 2.0, 4.0);
         vec3 l = normalize(lightPos - p);
         
         float diff = max(dot(n, l), 0.0);
         vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 32.0); // Increased specular power
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 3.0); // Enhanced fresnel
+        float spec = pow(max(dot(n, h), 0.0), 16.0);  // Reduced specular power
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);  // Softer fresnel
         
-        // Enhanced depth-based effects
-        float depth = smoothstep(4.0, 0.0, length(p));
-        float glow = exp(-1.5 * abs(map(p)));
+        // Stronger base visibility
+        float density = 1.0 - smoothstep(0.0, 1.0, length(p));
+        float glow = exp(-2.0 * abs(map(p)));  // Increased glow
         
-        // Combine effects with stronger depth influence
-        color += baseColor * (diff * 0.8 + 0.4) * depth;
-        color += vec3(1.0, 0.8, 0.6) * spec * 0.8;
-        color += baseColor * fresnel * 1.2;
-        color += baseColor * glow * depth * (u_bloom * 4.0);
+        // Add these effects to the base color instead of replacing it
+        color += baseColor * (diff * 0.7 + 0.3);  // Increased ambient
+        color += vec3(1.0) * spec * 0.5;
+        color += baseColor * fresnel * 0.8;
+        color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
         
-        // Add depth-based color variation
-        color *= 1.0 + vec3(0.2, 0.1, 0.0) * depth;
-        
-        // Enhanced depth falloff
-        color *= exp(-d * 0.15);
+        // Softer depth falloff
+        color *= exp(-d * 0.1);
     }
     
     gl_FragColor = vec4(color, 1.0);
@@ -327,6 +361,13 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(width, height);
   shaderMaterial.uniforms.u_resolution.value.set(width, height);
+});
+
+const toggleControls = document.getElementById('toggleControls');
+const controlsPanel = document.getElementById('controls');
+
+toggleControls.addEventListener('click', () => {
+  controlsPanel.classList.toggle('visible');
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
