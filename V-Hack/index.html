@@ -230,8 +230,9 @@ const shaderMaterial = new THREE.ShaderMaterial({
 });
 
 // Create a full-screen quad
-const geometry = new THREE.PlaneGeometry(2, 2);
+const geometry = new THREE.PlaneGeometry(3, 2);
 const mesh = new THREE.Mesh(geometry, shaderMaterial);
+// mesh.rotation.x = Math.PI; // Rotate 180 degrees
 scene.add(mesh);
 
 // Add white boundary
@@ -243,7 +244,7 @@ const wireframe = new THREE.LineSegments(
     new THREE.EdgesGeometry(geometry),
     wireframeMaterial
 );
-wireframe.position.z = -0.001; // Slightly behind
+wireframe.position.z = 0.000; // Slightly in front
 scene.add(wireframe);
 
 // Mouse tracking with normalized coordinates
