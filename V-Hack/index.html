@@ -85,8 +85,8 @@ float map(vec3 p) {
     float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
     spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
     
-    // Create flowing boundaries
-    float shape = length(p) - (0.8 + spiral * 0.4);
+    // Create flowing boundaries with larger base radius (increased from 0.8 to 1.5)
+    float shape = length(p) - (1.5 + spiral * 0.4);
     
     // Enhanced flowing distortion
     vec3 fbmVal = vec3(
