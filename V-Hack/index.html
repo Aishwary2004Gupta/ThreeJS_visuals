@@ -76,27 +76,26 @@ float sdf_sphere(vec3 p, float r) {
 }
 
 float map(vec3 p) {
-    // Remove sphere constraint and create flowing shape
     float angle = atan(p.y, p.x);
     float radius = length(p.xz);
     float height = p.y;
     
-    // Enhanced spiral pattern
+    // Enhanced 3D spiral pattern with depth variation
     float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
+    spiral *= (1.0 + sin(p.z * 2.0 + u_time * 0.5) * 0.3); // Add z-axis variation
     spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
     
-    // Create flowing boundaries
-    float shape = length(p) - (1.5 + spiral * 0.4);
+    // Create more pronounced 3D boundaries
+    float shape = length(p) - (1.5 + spiral * 0.6); // Increased spiral influence
     
-    // Enhanced flowing distortion
+    // Enhanced 3D flowing distortion
     vec3 fbmVal = vec3(
         fbm(p.xy + vec2(u_time * 0.2)),
         fbm(p.yz + vec2(u_time * 0.15)),
         fbm(p.xz + vec2(u_time * 0.1))
     );
     
-    // Combine with more freedom
-    return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
+    return shape + dot(fbmVal, vec3(0.6)) * u_distortion;
 }
 
 vec3 getNormal(vec3 p) {
@@ -126,9 +125,9 @@ float raymarch(vec3 ro, vec3 rd) {
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
     
-    // Fixed camera ray setup
-    vec3 ro = vec3(0.0, 0.0, 3.0);  // Fixed camera position
-    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));  // Simple ray direction
+    // Enhanced camera ray setup for better depth
+    vec3 ro = vec3(0.0, 0.0, 4.0);  // Moved camera back for more depth
+    vec3 rd = normalize(vec3(uv.x, uv.y, -1.5));  // Adjusted focal length
     
     // Transform ray by view matrix
     mat4 viewMatrix = inverse(u_viewMatrix);
@@ -139,31 +138,33 @@ void main() {
     vec3 p = ro + rd * d;
     vec3 n = getNormal(p);
     
-    // Always start with a base color instead of vec3(0.0)
-    vec3 color = u_color * 0.15; // Base ambient color
+    vec3 color = u_color * 0.2; // Increased base ambient color
     
     if(d < MAX_DIST) {
         vec3 baseColor = u_color;
-        vec3 lightPos = vec3(2.0, 2.0, 4.0);
+        vec3 lightPos = vec3(2.0, 4.0, 4.0); // Adjusted light position for better depth
         vec3 l = normalize(lightPos - p);
         
         float diff = max(dot(n, l), 0.0);
         vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 16.0);  // Reduced specular power
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);  // Softer fresnel
+        float spec = pow(max(dot(n, h), 0.0), 32.0); // Increased specular power
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 3.0); // Enhanced fresnel
         
-        // Stronger base visibility
-        float density = 1.0 - smoothstep(0.0, 1.0, length(p));
-        float glow = exp(-2.0 * abs(map(p)));  // Increased glow
+        // Enhanced depth-based effects
+        float depth = smoothstep(4.0, 0.0, length(p));
+        float glow = exp(-1.5 * abs(map(p)));
         
-        // Add these effects to the base color instead of replacing it
-        color += baseColor * (diff * 0.7 + 0.3);  // Increased ambient
-        color += vec3(1.0) * spec * 0.5;
-        color += baseColor * fresnel * 0.8;
-        color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
+        // Combine effects with stronger depth influence
+        color += baseColor * (diff * 0.8 + 0.4) * depth;
+        color += vec3(1.0, 0.8, 0.6) * spec * 0.8;
+        color += baseColor * fresnel * 1.2;
+        color += baseColor * glow * depth * (u_bloom * 4.0);
         
-        // Softer depth falloff
-        color *= exp(-d * 0.1);
+        // Add depth-based color variation
+        color *= 1.0 + vec3(0.2, 0.1, 0.0) * depth;
+        
+        // Enhanced depth falloff
+        color *= exp(-d * 0.15);
     }
     
     gl_FragColor = vec4(color, 1.0);
