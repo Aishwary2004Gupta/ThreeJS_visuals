@@ -229,23 +229,10 @@ const shaderMaterial = new THREE.ShaderMaterial({
     side: THREE.DoubleSide
 });
 
-// Create a full-screen quad
-const geometry = new THREE.PlaneGeometry(2, 2);
+// Replace the geometry creation and mesh lines with:
+const geometry = new THREE.IcosahedronGeometry(1, 2);
 const mesh = new THREE.Mesh(geometry, shaderMaterial);
-mesh.rotation.x = Math.PI; // Rotate 180 degrees
 scene.add(mesh);
-
-// Add white boundary
-const wireframeMaterial = new THREE.LineBasicMaterial({ 
-    color: 0xffffff,
-    linewidth: 1
-});
-const wireframe = new THREE.LineSegments(
-    new THREE.EdgesGeometry(geometry),
-    wireframeMaterial
-);
-wireframe.position.z = 0.001; // Slightly in front
-scene.add(wireframe);
 
 // Mouse tracking with normalized coordinates
 let mouseX = 0, mouseY = 0;
@@ -295,8 +282,11 @@ document.getElementById('distortion').addEventListener('input', (e) => {
   distortion = parseFloat(e.target.value);
 });
 
+let rotationSpeed = 0.001;
 function render(t) {
     const time = t * 0.001;
+    mesh.rotation.x += rotationSpeed;
+    mesh.rotation.y += rotationSpeed;
     
     controls.update();  // Update controls before setting uniforms
     
