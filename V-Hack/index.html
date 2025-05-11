@@ -65,8 +65,8 @@
   <label>Arms: <input type="range" id="arms" min="5" max="14" step="1" value="6"></label><br>
   <label>Color: <input type="color" id="color" value="#ff8800"></label>
   <div class="effect-controls">
-    <label>Bloom: <input type="range" id="bloom" min="0" max="1.5" step="0.1" value="0.5"></label><br>
-    <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.1"></label><br>
+    <label>Bloom: <input type="range" id="bloom" min="0" max="1.5" step="0.1" value="0.1"></label><br>
+    <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2"></label><br>
     <label>Distortion: <input type="range" id="distortion" min="0" max="0.5" step="0.1" value="0.0"></label>
   </div>
 </div>
@@ -297,8 +297,8 @@ const shaderMaterial = new THREE.ShaderMaterial({
         u_color: { value: new THREE.Vector3(1, 0.5, 0) },
         u_speed: { value: 1.0 },
         u_arms: { value: 6 },
-        u_bloom: { value: 0.5 },
-        u_noise: { value: 0.1 },
+        u_bloom: { value: 0.1 },
+        u_noise: { value: 0.2 },
         u_distortion: { value: 0.2 },
         u_depth: { value: 1.0 },
         u_viewMatrix: { value: new THREE.Matrix4() },
@@ -347,8 +347,8 @@ function hexToRGB(hex) {
 let speed = 1.5;
 let arms = 6;
 let color = hexToRGB('#ff8800');
-let bloom = 0.5;
-let noiseAmount = 0.1;
+let bloom = 0.1;
+let noiseAmount = 0.2;
 let distortion = 0.0;
 
 document.getElementById('speed').addEventListener('input', (e) => {
