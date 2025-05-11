@@ -158,14 +158,15 @@ float raymarch(vec3 ro, vec3 rd) {
     return d0;
 }
 
+// In the fragment shader, update the ray transformation:
 void main() {
     vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
     
     // Fixed camera ray setup
-    vec3 ro = vec3(0.0, 0.0, 3.0);  // Fixed camera position
-    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));  // Simple ray direction
+    vec3 ro = vec3(0.0, 0.0, 3.0);
+    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));
     
-    // Transform ray by view matrix
+    // Transform ray by orbital view matrix only for the effect
     mat4 viewMatrix = inverse(u_viewMatrix);
     ro = (viewMatrix * vec4(ro, 1.0)).xyz;
     rd = (viewMatrix * vec4(rd, 0.0)).xyz;
@@ -224,23 +225,28 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0.7, 0.7, -2); // Changed from positive to negative Z
-camera.lookAt(0, 0, 0); // Changed to look at center
 
-const controls = new THREE.OrbitControls(camera, canvas);
+// Static camera for the plane
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 0, 2);
+camera.lookAt(0, 0, 0);
+
+// Orbital camera for the shader effect
+const orbitalCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+orbitalCamera.position.set(0.7, 0.7, -2);
+orbitalCamera.lookAt(0, 0, 0);
+
+// Controls now use orbital camera
+const controls = new THREE.OrbitControls(orbitalCamera, canvas);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.screenSpacePanning = false;
-controls.minDistance = 2.5; // Increased minimum distance
+controls.minDistance = 2.5;
 controls.maxDistance = 5;
 controls.rotateSpeed = 0.5;
 controls.enableZoom = true;
 controls.enablePan = false;
 controls.target.set(0, 0, 0);
-
-// Add initial rotation to match the image
-controls.autoRotate = false; // Disable auto-rotation
 controls.update();
 
 // Create shader material
@@ -256,7 +262,8 @@ const shaderMaterial = new THREE.ShaderMaterial({
         u_noise: { value: 0.1 },
         u_distortion: { value: 0.2 },
         u_depth: { value: 1.0 },
-        u_viewMatrix: { value: new THREE.Matrix4() }
+        u_viewMatrix: { value: new THREE.Matrix4() },
+        u_planeMatrix: { value: new THREE.Matrix4() }
     },
     vertexShader: document.getElementById("vertShader").textContent,
     fragmentShader: document.getElementById("fragShader").textContent,
@@ -267,7 +274,6 @@ const shaderMaterial = new THREE.ShaderMaterial({
 // Create a full-screen quad
 const geometry = new THREE.PlaneGeometry(3, 2);
 const mesh = new THREE.Mesh(geometry, shaderMaterial);
-// mesh.rotation.x = Math.PI; // Rotate 180 degrees
 scene.add(mesh);
 
 // Add white boundary
@@ -332,12 +338,11 @@ document.getElementById('distortion').addEventListener('input', (e) => {
 
 function render(t) {
     const time = t * 0.001;
-    
     controls.update();  // Update controls before setting uniforms
     
-    // Update view matrix uniform
+    // Update matrices
+    orbitalCamera.updateMatrixWorld();
     camera.updateMatrixWorld();
-    camera.matrixWorldInverse.copy(camera.matrixWorld).invert();
     
     mesh.material.uniforms.u_time.value = time;
     mesh.material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
@@ -347,7 +352,8 @@ function render(t) {
     mesh.material.uniforms.u_bloom.value = bloom;
     mesh.material.uniforms.u_noise.value = noiseAmount;
     mesh.material.uniforms.u_distortion.value = distortion;
-    mesh.material.uniforms.u_viewMatrix.value.copy(camera.matrixWorld);  // Use world matrix instead of inverse
+    mesh.material.uniforms.u_viewMatrix.value.copy(orbitalCamera.matrixWorld);
+    mesh.material.uniforms.u_planeMatrix.value.copy(camera.matrixWorld);
 
     renderer.render(scene, camera);
     requestAnimationFrame(render);
@@ -359,6 +365,8 @@ window.addEventListener('resize', () => {
   const height = window.innerHeight;
   camera.aspect = width / height;
   camera.updateProjectionMatrix();
+  orbitalCamera.aspect = width / height;
+  orbitalCamera.updateProjectionMatrix();
   renderer.setSize(width, height);
   shaderMaterial.uniforms.u_resolution.value.set(width, height);
 });
