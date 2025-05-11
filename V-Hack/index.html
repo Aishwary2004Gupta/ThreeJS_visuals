@@ -139,8 +139,9 @@ void main() {
     vec3 p = ro + rd * d;
     vec3 n = getNormal(p);
     
-    // Enhanced visibility of the effect
-    vec3 color = vec3(0.0);
+    // Always start with a base color instead of vec3(0.0)
+    vec3 color = u_color * 0.15; // Base ambient color
+    
     if(d < MAX_DIST) {
         vec3 baseColor = u_color;
         vec3 lightPos = vec3(2.0, 2.0, 4.0);
@@ -155,8 +156,8 @@ void main() {
         float density = 1.0 - smoothstep(0.0, 1.0, length(p));
         float glow = exp(-2.0 * abs(map(p)));  // Increased glow
         
-        // Enhanced visibility
-        color = baseColor * (diff * 0.7 + 0.3);  // Increased ambient
+        // Add these effects to the base color instead of replacing it
+        color += baseColor * (diff * 0.7 + 0.3);  // Increased ambient
         color += vec3(1.0) * spec * 0.5;
         color += baseColor * fresnel * 0.8;
         color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
@@ -231,6 +232,7 @@ const shaderMaterial = new THREE.ShaderMaterial({
 // Create a full-screen quad
 const geometry = new THREE.PlaneGeometry(2, 2);
 const mesh = new THREE.Mesh(geometry, shaderMaterial);
+mesh.rotation.x = Math.PI; // Rotate 180 degrees
 scene.add(mesh);
 
 // Add white boundary
