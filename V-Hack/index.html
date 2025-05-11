@@ -9,11 +9,16 @@
       overflow: hidden; 
       background: black;
       background-image: 
+        radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+          rgba(255, 136, 0, 0.15) 0%, 
+          transparent 150px),
         linear-gradient(rgba(255, 136, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 136, 0, 0.1) 1px, transparent 1px),
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      background-size: 100% 100%, 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+      transition: background-position 0.05s;
     }
     canvas { width: 100vw; height: 100vh; display: block; }
     #controls {
@@ -334,6 +339,14 @@ canvas.addEventListener('mousemove', (e) => {
     mouseX = (e.clientX - rect.left) / rect.width;
     mouseY = 1 - (e.clientY - rect.top) / rect.height;
     shaderMaterial.uniforms.u_mouse.value.set(mouseX * window.innerWidth, mouseY * window.innerHeight);
+});
+
+// Add this code right before the render function
+document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100;
+    const y = (e.clientY / window.innerHeight) * 100;
+    document.body.style.setProperty('--mouse-x', `${x}%`);
+    document.body.style.setProperty('--mouse-y', `${y}%`);
 });
 
 // Control handlers
