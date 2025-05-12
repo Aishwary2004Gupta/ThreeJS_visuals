@@ -4,20 +4,28 @@
   <meta charset="UTF-8" />
   <title>Solar Vortex Shader</title>
   <style>
+    :root {
+      --mouse-x: 50%;
+      --mouse-y: 50%;
+      --tile-glow: rgba(255, 255, 255, 0);
+    }
     body { 
       margin: 0; 
       overflow: hidden; 
       background: black;
-        background-image: 
-        radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      background-image: 
+        radial-gradient(circle at var(--mouse-x) var(--mouse-y), 
           rgba(255, 136, 0, 0.15) 0%, 
           transparent 150px),
+        radial-gradient(circle at var(--mouse-x) var(--mouse-y),
+          var(--tile-glow) 0%,
+          transparent 50px),
         linear-gradient(rgba(255, 136, 0, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 136, 0, 0.1) 1px, transparent 1px),
         linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 100% 100%, 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-      background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+      background-size: 100% 100%, 100% 100%, 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+      background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
       transition: background-position 0.05s;
     }
     canvas { width: 100vw; height: 100vh; display: block; }
@@ -353,6 +361,33 @@ document.addEventListener('mousemove', (e) => {
     const y = (e.clientY / window.innerHeight) * 100;
     document.body.style.setProperty('--mouse-x', `${x}%`);
     document.body.style.setProperty('--mouse-y', `${y}%`);
+});
+
+// Add this before the existing mousemove event listener
+const trailPoints = [];
+const maxTrailLength = 10;
+
+document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth) * 100;
+    const y = (e.clientY / window.innerHeight) * 100;
+    
+    // Add new point to trail
+    trailPoints.push({ x, y, age: 1.0 });
+    if (trailPoints.length > maxTrailLength) {
+        trailPoints.shift();
+    }
+    
+    // Update glow based on trail
+    let glowIntensity = 0;
+    trailPoints.forEach(point => {
+        glowIntensity = Math.max(glowIntensity, point.age);
+        point.age *= 0.9;
+    });
+    
+    document.body.style.setProperty('--mouse-x', `${x}%`);
+    document.body.style.setProperty('--mouse-y', `${y}%`);
+    document.body.style.setProperty('--tile-glow', 
+        `rgba(255, 255, 255, ${glowIntensity * 0.3})`);
 });
 
 // Control handlers
