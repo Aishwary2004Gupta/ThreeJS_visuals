@@ -116,27 +116,29 @@ float sdf_sphere(vec3 p, float r) {
 }
 
 float map(vec3 p) {
-    // Remove sphere constraint and create flowing shape
     float angle = atan(p.y, p.x);
     float radius = length(p.xz);
     float height = p.y;
     
-    // Enhanced spiral pattern
-    float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
-    spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
+    // Create more dramatic solar vortex pattern
+    float spiral = sin(angle * u_arms + radius * 3.0 - u_time * u_speed) * 1.2;
+    spiral += cos(height * 2.0 + angle * 3.0 + u_time * u_speed * 0.5) * 0.8;
     
-    // Create flowing boundaries
-    float shape = length(p) - (1.5 + spiral * 0.4);
+    // Add solar flare-like effect
+    float flare = sin(angle * 3.0 + u_time * u_speed * 0.2) * 0.3;
+    flare *= sin(radius * 4.0 - u_time * u_speed * 0.3);
     
-    // Enhanced flowing distortion
+    // Create core and corona effect
+    float shape = length(p) - (1.2 + spiral * 0.5 + flare);
+    
+    // Add turbulent flow
     vec3 fbmVal = vec3(
-        fbm(p.xy + vec2(u_time * 0.2)),
-        fbm(p.yz + vec2(u_time * 0.15)),
-        fbm(p.xz + vec2(u_time * 0.1))
+        fbm(p.xy + vec2(u_time * 0.3)),
+        fbm(p.yz + vec2(u_time * 0.25)),
+        fbm(p.xz + vec2(u_time * 0.2))
     );
     
-    // Combine with more freedom
-    return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
+    return shape + dot(fbmVal, vec3(0.5)) * u_distortion;
 }
 
 vec3 getNormal(vec3 p) {
@@ -220,31 +222,34 @@ void main() {
         
         float diff = max(dot(n, l), 0.0);
         vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 16.0);  // Reduced specular power
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);  // Softer fresnel
+        float spec = pow(max(dot(n, h), 0.0), 8.0);  // Softer specular
+        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
         
-        // Stronger base visibility
-        float density = 1.0 - smoothstep(0.0, 1.0, length(p));
-        float glow = exp(-2.0 * abs(map(p)));  // Increased glow
+        // Enhanced corona effect
+        float corona = exp(-2.5 * abs(map(p)));
+        float density = 1.0 - smoothstep(0.0, 1.5, length(p));
         
-        // Add these effects to the base color instead of replacing it
-        color += baseColor * (diff * 0.7 + 0.3);  // Increased ambient
-        color += vec3(1.0) * spec * 0.5;
-        color += baseColor * fresnel * 0.8;
-        color += baseColor * glow * density * (u_bloom * 3.0);  // Increased bloom effect
+        // Solar surface effect
+        color += baseColor * (diff * 0.8 + 0.4);
+        color += vec3(1.0, 0.8, 0.5) * spec * 0.6;
+        color += baseColor * fresnel * 1.2;
+        color += baseColor * corona * density * (u_bloom * 4.0);
         
-        // Enhanced bloom effect
-        float bloomIntensity = u_bloom * 2.0;
-        vec3 bloomColor = baseColor * glow * bloomIntensity;
-        color += bloomColor;
+        // Add heat distortion
+        float heatDistortion = fbm(p.xy * 2.0 + u_time * 0.1) * u_distortion;
+        color += baseColor * heatDistortion * 0.8;
         
-        // Add noise-based distortion to final color
-        float noiseEffect = noise3D(p + vec3(u_time * 0.2)) * u_noise;
-        color += baseColor * noiseEffect * 0.5;
+        // Add solar flares
+        float flare = pow(fresnel, 1.5) * corona * u_bloom;
+        color += baseColor * flare * 2.0;
         
-        // Softer depth falloff
-        color *= exp(-d * 0.1);
+        // Soften depth falloff for corona
+        color *= exp(-d * 0.08);
     }
+    
+    // Add subtle color correction for solar look
+    color = pow(color, vec3(0.8));
+    color *= 1.2; // Increase overall brightness
     
     gl_FragColor = vec4(color, 1.0);
 }
