@@ -72,7 +72,8 @@
   <div class="effect-controls">
     <label>Bloom: <input type="range" id="bloom" min="0" max="1.5" step="0.1" value="0.1"></label><br>
     <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2"></label><br>
-    <label>Distortion: <input type="range" id="distortion" min="0" max="0.5" step="0.1" value="0.0"></label>
+    <label>Distortion: <input type="range" id="distortion" min="0" max="0.5" step="0.1" value="0.0"></label><br>
+    <label>Tilt: <input type="range" id="tilt" min="0" max="0.5" step="0.05" value="0.15"></label>
   </div>
 </div>
 <canvas id="glcanvas"></canvas>
@@ -338,6 +339,11 @@ canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
     mouseX = (e.clientX - rect.left) / rect.width;
     mouseY = 1 - (e.clientY - rect.top) / rect.height;
+    
+    // Calculate target rotation based on mouse position
+    targetRotationX = (mouseY - 0.5) * tiltAmount;
+    targetRotationY = (mouseX - 0.5) * tiltAmount;
+    
     shaderMaterial.uniforms.u_mouse.value.set(mouseX * window.innerWidth, mouseY * window.innerHeight);
 });
 
@@ -364,6 +370,12 @@ let bloom = 0.1;
 let noiseAmount = 0.2;
 let distortion = 0.0;
 
+let tiltAmount = 0.15;
+let targetRotationX = 0;
+let targetRotationY = 0;
+let currentRotationX = 0;
+let currentRotationY = 0;
+
 document.getElementById('speed').addEventListener('input', (e) => {
   speed = parseFloat(e.target.value);
 });
@@ -388,10 +400,25 @@ document.getElementById('distortion').addEventListener('input', (e) => {
   distortion = parseFloat(e.target.value);
 });
 
+document.getElementById('tilt').addEventListener('input', (e) => {
+  tiltAmount = parseFloat(e.target.value);
+});
+
 function render(t) {
     const time = t * 0.001;
     controls.update();  // Update controls before setting uniforms
     
+    // Smooth rotation interpolation
+    currentRotationX += (targetRotationX - currentRotationX) * 0.1;
+    currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+    
+    // Apply rotation to the mesh
+    mesh.rotation.x = currentRotationX;
+    mesh.rotation.y = currentRotationY;
+    
+    // Apply same rotation to wireframe
+    wireframe.rotation.copy(mesh.rotation);
+
     // Update matrices
     orbitalCamera.updateMatrixWorld();
     camera.updateMatrixWorld();
