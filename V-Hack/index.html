@@ -314,15 +314,24 @@ const geometry = new THREE.PlaneGeometry(3, 2);
 const mesh = new THREE.Mesh(geometry, shaderMaterial);
 scene.add(mesh);
 
-const wireframeMaterial = new THREE.LineBasicMaterial({ 
-    color: 0xffffff,
-    linewidth: 1
-});
-const wireframe = new THREE.LineSegments(
-    new THREE.EdgesGeometry(geometry),
-    wireframeMaterial
-);
-wireframe.position.z = 0.000;
+const createWireframe = (geometry, color, thickness) => {
+    const group = new THREE.Group();
+    const edges = new THREE.EdgesGeometry(geometry);
+    
+    for (let i = 0; i < thickness; i++) {
+        const mat = new THREE.LineBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: 0.7
+        });
+        const wireframe = new THREE.LineSegments(edges, mat);
+        wireframe.position.z = i * 0.0005;
+        group.add(wireframe);
+    }
+    return group;
+};
+
+const wireframe = createWireframe(geometry, 0xffffff, 10);
 scene.add(wireframe);
 
 let mouseX = 0, mouseY = 0;
