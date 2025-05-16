@@ -1,0 +1,38 @@
+HTML Structure Comments:
+- Controls the grid pattern and mouse-following gradient in background
+- Canvas takes full viewport width and height
+- Control panel styling with orange accents
+- Toggle button for controls panel
+- Three.js and OrbitControls dependencies
+
+Shader Material Comments:
+- Static camera for the plane
+- Orbital camera for shader effect
+- Controls use orbital camera
+- Create shader material with uniforms
+- Create full-screen quad
+- Add white boundary
+- Mouse tracking with normalized coordinates
+- Calculate target rotation based on mouse position
+- Control handlers for UI elements
+- Smooth rotation interpolation
+- Add continuous Y-axis rotation
+- Add oscillating x-rotation
+- Apply rotation to mesh and wireframe
+- Update matrices and uniforms
+- Handle window resize events
+
+Camera Settings:
+- Static camera position: (0, 0, 2)
+- Orbital camera initial position: (0.7, 0.7, -2)
+- Min distance: 2.5
+- Max distance: 5
+
+Control Parameters:
+- Speed: Animation speed control
+- Arms: Number of spiral arms
+- Color: Primary color control
+- Bloom: Glow intensity
+- Noise: Noise texture amount
+- Distortion: Shape distortion
+- Tilt: Perspective tilt response

@@ -77,6 +77,16 @@
   </div>
 </div>
 <canvas id="glcanvas"></canvas>
+<script type="x-shader/x-vertex" id="vertShader">
+varying vec2 vUv;
+varying vec3 vPosition;
+
+void main() {
+    vUv = uv;
+    vPosition = position;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+</script>
 <script type="x-shader/x-fragment" id="fragShader">
 precision highp float;
 uniform float u_time;
@@ -262,16 +272,6 @@ void main() {
     }
     
     gl_FragColor = vec4(color, 1.0);
-}
-</script>
-<script type="x-shader/x-vertex" id="vertShader">
-varying vec2 vUv;
-varying vec3 vPosition;
-
-void main() {
-    vUv = uv;
-    vPosition = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
 }
 </script>
 <script>
