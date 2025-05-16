@@ -423,6 +423,10 @@ function render(t) {
     const time = t * 0.001;
     controls.update();
     
+    // Add continuous Y-axis rotation
+    mesh.rotation.y = time * 0.5; // Adjust rotation speed by changing multiplier
+    wireframe.rotation.y = mesh.rotation.y; // Keep wireframe in sync
+    
     // Add oscillating x-rotation
     const xRotation = Math.sin(time * 0.5) * 0.2; // Adjust speed and amplitude as needed
     mesh.material.uniforms.u_xRotation.value = xRotation;
