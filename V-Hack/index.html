@@ -74,7 +74,7 @@
     <label>Bloom: <input type="range" id="bloom" min="0" max="1.5" step="0.1" value="0.1"></label><br>
     <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2"></label><br>
     <label>Distortion: <input type="range" id="distortion" min="0" max="0.5" step="0.1" value="0.0"></label><br>
-    <label>Tilt: <input type="range" id="tilt" min="0" max="0.5" step="0.05" value="0.15"></label>
+    <label>Tilt: <input type="range" id="tilt" min="0" max="1" step="0.2" value="0.4"></label>
   </div>
 </div>
 <canvas id="glcanvas"></canvas>
@@ -358,7 +358,7 @@ let bloom = 0.1;
 let noiseAmount = 0.2;
 let distortion = 0.0;
 
-let tiltAmount = 0.15;
+let tiltAmount = 0.4;
 let targetRotationX = 0;
 let targetRotationY = 0;
 let currentRotationX = 0;
