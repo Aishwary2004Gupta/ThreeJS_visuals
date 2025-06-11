@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
     <button id="info">Click to use audio</button>
-<div class="debug-panel">
-  <div class="debug-item">
-    Low:
-    <span class="value" id="lowFreq">0</span>
-  </div>
-  <div class="debug-item">
-    Mid:
-    <span class="value" id="midFreq">0</span>
-  </div>
-  <div class="debug-item">
-    High:
-    <span class="value" id="highFreq">0</span>
-  </div>
-</div>
+    <div class="debug-panel">
+        <div class="debug-item">
+            Low:
+            <span class="value" id="lowFreq">0</span>
+        </div>
+        <div class="debug-item">
+            Mid:
+            <span class="value" id="midFreq">0</span>
+        </div>
+        <div class="debug-item">
+            High:
+            <span class="value" id="highFreq">0</span>
+        </div>
+    </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js"></script>
 
-<script id="vertexShader" type="x-shader/x-vertex">
+    <script id="vertexShader" type="x-shader/x-vertex">
   uniform float uTime;
     uniform float uAudioLow;
     uniform float uAudioMid;
@@ -192,7 +194,7 @@
     }
 </script>
 
-<script id="fragmentShader" type="x-shader/x-fragment">
+    <script id="fragmentShader" type="x-shader/x-fragment">
   varying vec3 vColor;
     varying float vAudioMid;
     
@@ -213,4 +215,5 @@
     }
 </script>
 </body>
+
 </html>
