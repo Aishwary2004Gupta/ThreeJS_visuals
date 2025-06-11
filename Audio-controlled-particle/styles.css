@@ -5,7 +5,7 @@ body {
   font-weight: 700;
   margin: 0;
   overflow: hidden;
-  font-size:12px;
+  font-size: 12px;
 }
 .hide {
   display: none;
@@ -20,7 +20,7 @@ body {
   padding: 8px;
   font-family: "Quicksand", sans-serif;
   color: #fff;
-  font-weight:700;
+  font-weight: 700;
   border-radius: 5px;
   z-index: 100;
 }
