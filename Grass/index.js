@@ -287,8 +287,8 @@ function Firefly() {
   this.flickerPhase = randFrom(0, Math.PI * 2);
   this.vx = randFrom(-0.15, 0.15);
   this.vy = randFrom(-0.07, 0.07);
-  this.color = `rgba(255,${Math.floor(randFrom(220,255))},100,1)`;
-  this.update = function() {
+  this.color = `rgba(255,${Math.floor(randFrom(220, 255))},100,1)`;
+  this.update = function () {
     this.x += this.vx;
     this.y += this.vy;
     // Bounce off edges
@@ -297,7 +297,7 @@ function Firefly() {
     // Flicker phase
     this.flickerPhase += this.flickerSpeed;
   };
-  this.draw = function(ctx) {
+  this.draw = function (ctx) {
     var flicker = this.baseAlpha + 0.12 * Math.sin(this.flickerPhase + Math.sin(this.flickerPhase * 0.7));
     ctx.save();
     ctx.globalAlpha = Math.max(0, flicker);
