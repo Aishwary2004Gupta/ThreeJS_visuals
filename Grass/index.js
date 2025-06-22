@@ -224,50 +224,29 @@ function Blade(x, y, dir, baseLength, stiffness, drag) {
   //This function creates a blade of grass and specifies its direction(dir),base length, stiffness and drag
   this.shrinkVal = 0.8
   var base = new Particle(x, y)
-  // Add more natural color variation
-  var baseHue = randFrom(85, 120);
-  var tipHue = baseHue + randFrom(-8, 8);
-  var baseLight = randFrom(20, 35);
-  var tipLight = baseLight + randFrom(10, 20);
-  var colBase = `hsl(${baseHue},100%,${baseLight}%)`;
-  var colTip = `hsla(${tipHue},100%,${tipLight}%,0.7)`;
+  var col = "hsl(" + randFrom(85, 120) + ",100%," + randFrom(20, 45) + "%)"
   this.l1 = baseLength
   this.l2 = baseLength * this.shrinkVal
   this.l3 = baseLength * this.shrinkVal * this.shrinkVal
-  // Add random curve to blade direction
-  var curveAmount = randFrom(-0.25, 0.25);
-  var curveDir = { x: dir.x + curveAmount, y: dir.y + randFrom(-0.1, 0.1) };
   this.node1 = new Particle(x + dir.x * this.l1, y + dir.y * this.l1)
-  this.node2 = new Particle(x + curveDir.x * (this.l1 + this.l2), y + curveDir.y * (this.l1 + this.l2))
-  this.node3 = new Particle(x + curveDir.x * (this.l1 + this.l2 + this.l3), y + curveDir.y * (this.l1 + this.l2 + this.l3))
+  this.node2 = new Particle(x + dir.x * (this.l1 + this.l2), y + dir.y * (this.l1 + this.l2))
+  this.node3 = new Particle(x + dir.x * (this.l1 + this.l2 + this.l3), y + dir.y * (this.l1 + this.l2 + this.l3))
   this.show = function () {
-    // Draw gradient blade
-    var grad = ctx.createLinearGradient(x, y, this.node3.pos.x, this.node3.pos.y);
-    grad.addColorStop(0, colBase);
-    grad.addColorStop(1, colTip);
-    ctx.strokeStyle = grad;
-    // Vary thickness from base to tip
-    ctx.lineWidth = randFrom(2.5, 4.5);
+    ctx.strokeStyle = col
+    ctx.lineWidth = 4
     ctx.beginPath()
     curveVertex(x, y, ctx)
     curveVertex(x, y, ctx)
     curveVertex(this.node1.pos.x, this.node1.pos.y, ctx)
+
     curveVertex(this.node2.pos.x, this.node2.pos.y, ctx)
     curveVertex(this.node3.pos.x, this.node3.pos.y, ctx)
+
     curveVertex(this.node3.pos.x, this.node3.pos.y, ctx, false)
     ctx.stroke()
-    // Draw tip highlight for softness
-    ctx.save();
-    ctx.globalAlpha = 0.18;
-    ctx.beginPath();
-    ctx.arc(this.node3.pos.x, this.node3.pos.y, randFrom(5, 10), 0, 2 * Math.PI);
-    ctx.fillStyle = colTip;
-    ctx.fill();
-    ctx.restore();
-    // Optionally, draw nodes for debugging
-    // this.node1.show()
-    // this.node2.show()
-    // this.node3.show()
+    this.node1.show()
+    this.node2.show()
+    this.node3.show()
   }
   this.upd = function () {
     this.anc1 = {
