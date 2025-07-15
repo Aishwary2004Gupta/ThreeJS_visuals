@@ -276,42 +276,42 @@ function Blade(x, y, dir, baseLength, stiffness, drag) {
   }
 }
 // --- Firefly code start ---
-var fireflies = [];
-var FIREFLY_COUNT = 30;
-function Firefly() {
-  this.x = randFrom(0, can.width);
-  this.y = randFrom(0, can.height * 0.7);
-  this.radius = randFrom(1.5, 3.5);
-  this.baseAlpha = randFrom(0.12, 0.22);
-  this.flickerSpeed = randFrom(0.01, 0.03);
-  this.flickerPhase = randFrom(0, Math.PI * 2);
-  this.vx = randFrom(-0.15, 0.15);
-  this.vy = randFrom(-0.07, 0.07);
-  this.color = `rgba(255,${Math.floor(randFrom(220, 255))},100,1)`;
-  this.update = function () {
-    this.x += this.vx;
-    this.y += this.vy;
-    // Bounce off edges
-    if (this.x < 0 || this.x > can.width) this.vx *= -1;
-    if (this.y < 0 || this.y > can.height * 0.8) this.vy *= -1;
-    // Flicker phase
-    this.flickerPhase += this.flickerSpeed;
-  };
-  this.draw = function (ctx) {
-    var flicker = this.baseAlpha + 0.12 * Math.sin(this.flickerPhase + Math.sin(this.flickerPhase * 0.7));
-    ctx.save();
-    ctx.globalAlpha = Math.max(0, flicker);
-    var grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 4);
-    grad.addColorStop(0, this.color);
-    grad.addColorStop(0.5, 'rgba(255,255,180,0.5)');
-    grad.addColorStop(1, 'rgba(255,255,180,0)');
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius * 4, 0, 2 * Math.PI);
-    ctx.fillStyle = grad;
-    ctx.fill();
-    ctx.restore();
-  };
-}
+// var fireflies = [];
+// var FIREFLY_COUNT = 30;
+// function Firefly() {
+//   this.x = randFrom(0, can.width);
+//   this.y = randFrom(0, can.height * 0.7);
+//   this.radius = randFrom(1.5, 3.5);
+//   this.baseAlpha = randFrom(0.12, 0.22);
+//   this.flickerSpeed = randFrom(0.01, 0.03);
+//   this.flickerPhase = randFrom(0, Math.PI * 2);
+//   this.vx = randFrom(-0.15, 0.15);
+//   this.vy = randFrom(-0.07, 0.07);
+//   this.color = `rgba(255,${Math.floor(randFrom(220, 255))},100,1)`;
+//   this.update = function () {
+//     this.x += this.vx;
+//     this.y += this.vy;
+//     // Bounce off edges
+//     if (this.x < 0 || this.x > can.width) this.vx *= -1;
+//     if (this.y < 0 || this.y > can.height * 0.8) this.vy *= -1;
+//     // Flicker phase
+//     this.flickerPhase += this.flickerSpeed;
+//   };
+//   this.draw = function (ctx) {
+//     var flicker = this.baseAlpha + 0.12 * Math.sin(this.flickerPhase + Math.sin(this.flickerPhase * 0.7));
+//     ctx.save();
+//     ctx.globalAlpha = Math.max(0, flicker);
+//     var grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 4);
+//     grad.addColorStop(0, this.color);
+//     grad.addColorStop(0.5, 'rgba(255,255,180,0.5)');
+//     grad.addColorStop(1, 'rgba(255,255,180,0)');
+//     ctx.beginPath();
+//     ctx.arc(this.x, this.y, this.radius * 4, 0, 2 * Math.PI);
+//     ctx.fillStyle = grad;
+//     ctx.fill();
+//     ctx.restore();
+//   };
+// }
 // --- Firefly code end ---
 function gameMake() {
   //This function sets up the simulation
@@ -321,21 +321,21 @@ function gameMake() {
     var ang = -Math.PI / 2 + randFrom(-variety, variety)
     grass.push(new Blade((i + 1) / (num + 1) * can.width, can.height, { x: Math.cos(ang), y: Math.sin(ang) }, randFrom(50, 80), 0.3, 0.3))
   }
-  // Add fireflies
-  fireflies = [];
-  for (var f = 0; f < FIREFLY_COUNT; f++) {
-    fireflies.push(new Firefly());
-  }
+  // // Add fireflies
+  // fireflies = [];
+  // for (var f = 0; f < FIREFLY_COUNT; f++) {
+  //   fireflies.push(new Firefly());
+  // }
 }
 function gameMove() {
   //This function animates the simulation
   ctx.lineWidth = 1
   ctx.clearRect(0, 0, can.width, can.height);
   // Draw fireflies in the background
-  for (var f = 0; f < fireflies.length; f++) {
-    fireflies[f].update();
-    fireflies[f].draw(ctx);
-  }
+  // for (var f = 0; f < fireflies.length; f++) {
+  //   fireflies[f].update();
+  //   fireflies[f].draw(ctx);
+  // }
   ctx.textAlign = "center"
   ctx.strokeStyle = "white"
   ctx.font = "40px Calibri"
