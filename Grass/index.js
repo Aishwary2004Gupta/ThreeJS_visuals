@@ -327,6 +327,46 @@ function gameMake() {
   //   fireflies.push(new Firefly());
   // }
 }
+// Create fireflies
+    const quantity = 15; // Number of fireflies
+    for (let i = 1; i <= quantity; i++) {
+      const firefly = document.createElement('div');
+      firefly.className = 'firefly';
+      document.body.appendChild(firefly);
+      
+      // Randomize animation parameters
+      const steps = Math.floor(Math.random() * 12) + 16; // Steps for movement (16-28)
+      const rotationSpeed = Math.floor(Math.random() * 10) + 8; // Rotation speed (8-18s)
+      
+      // Create unique movement animation for each firefly
+      const keyframes = [];
+      for (let step = 0; step <= steps; step++) {
+        const percentage = step * (100 / steps);
+        const x = (Math.random() * 100 - 50) + 'vw'; // Random horizontal position (-50vw to 50vw)
+        const y = (Math.random() * 100 - 50) + 'vh'; // Random vertical position (-50vh to 50vh)
+        const scale = Math.random() * 0.75 + 0.25; // Random scale (0.25 to 1.0)
+        keyframes.push(`${percentage}% { transform: translateX(${x}) translateY(${y}) scale(${scale}); }`);
+      }
+      
+      // Create style element with the animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes move${i} {
+          ${keyframes.join('\n')}
+        }
+        .firefly:nth-child(${i}) {
+          animation-name: move${i};
+        }
+        .firefly:nth-child(${i})::before {
+          animation-duration: ${rotationSpeed}s;
+        }
+        .firefly:nth-child(${i})::after {
+          animation-duration: ${rotationSpeed}s, ${Math.floor(Math.random() * 6000) + 5000}ms;
+          animation-delay: 0ms, ${Math.floor(Math.random() * 8000) + 500}ms;
+        }
+      `;
+      document.head.appendChild(style);
+    }
 function gameMove() {
   //This function animates the simulation
   ctx.lineWidth = 1
