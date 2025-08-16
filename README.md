@@ -1,6 +1,7 @@
 # ThreeJS_visuals   
                                        
 Project Type: A collection of interactive 3D visualizations and simulations built using Three.js. The projects range from simple geometric shapes to more complex simulations like fluid dynamics and physics-based interactions.                                       
+                                       
                                        Use 3D animated objects and more in you project 👇🏻 
 
 https://github.com/user-attachments/assets/3838c619-aeed-492f-a179-b4c2a5b1cb6a 
