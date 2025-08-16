@@ -1,7 +1,16 @@
 # ThreeJS_visuals   
                                        
 Project Type: A collection of interactive 3D visualizations and simulations built using Three.js. The projects range from simple geometric shapes to more complex simulations like fluid dynamics and physics-based interactions.                                       
-                                       
+Tech Stack:
+- Three.js: A JavaScript 3D library.
+- HTML: For structuring the web pages.
+- CSS: For styling the web pages.
+- JavaScript: For implementing the application logic and Three.js interactions.
+- dat.GUI: A lightweight graphical user interface for changing variables in JavaScript.
+- Rapier: A 3D physics engine (used in one example).
+- OrbitControls: A Three.js control for orbiting the camera around a target.
+- GLSL (Shaders): Implicitly used within Three.js for custom material effects.                                       
+
                                        Use 3D animated objects and more in you project 👇🏻 
 
 https://github.com/user-attachments/assets/3838c619-aeed-492f-a179-b4c2a5b1cb6a 
