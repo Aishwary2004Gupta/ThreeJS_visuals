@@ -1,556 +1,618 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Solar Vortex Shader</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>Solar Vortex Shader</title>
-
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #000000;
-      background-image:
-        /* Glowing orb effect */
-        radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-          rgba(255, 136, 0, 0.2) 0%,
-          rgba(255, 136, 0, 0.1) 20%,
-          transparent 40%),
-        /* Diagonal lines */
-        repeating-linear-gradient(
-          45deg,
-          rgba(255, 136, 0, 0.03) 0px,
-          rgba(255, 136, 0, 0.03) 1px,
-          transparent 1px,
-          transparent 10px
-        ),
-        /* Grid overlay */
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        /* Subtle orange glow */
-        radial-gradient(
-          circle at 50% 50%,
-          rgba(255, 136, 0, 0.1),
-          rgba(0, 0, 0, 1) 100%
-        );
-      background-size:
-        100% 100%,
-        20px 20px,
-        50px 50px,
-        50px 50px,
-        100% 100%;
-      background-position:
-        0 0,
-        0 0,
-        0 0,
-        0 0,
-        0 0;
-      transition: background-position 0.3s ease;
-    }
-    canvas {
-      width: 100vw;
-      height: 100vh;
-      display: block;
-    }
-
-    /* Update the controls style to match the new theme */
-    #controls {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.9);
-      padding: 38px;
-      border-radius: 8px;
-      color: white;
-      border: 1px solid rgba(255, 136, 0, 0.5);
-      box-shadow: 0 0 20px rgba(255, 136, 0, 0.2);
-      backdrop-filter: blur(10px);
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
-    }
-
-    #controls.visible {
-      transform: translateX(0);
-    }
-
-    .effect-controls {
-      margin-top: 10px;
-      border-top: 1px solid rgba(255, 136, 0, 0.3);
-      padding-top: 10px;
-    }
-
-    #toggleControls {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      border: 1px solid rgba(255, 136, 0, 0.5);
-      box-shadow: 0 0 10px rgba(255, 136, 0, 0.2);
-      backdrop-filter: blur(5px);
-      padding: 8px 15px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
-    #toggleControls:hover {
-      background: rgba(255, 136, 0, 0.3);
-    }
-
-    input[type="range"] {
-      accent-color: #ff8800;
-    }
-
-    /* Logo styles */
-    .logo-container {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      border: 2px solid rgba(255, 136, 0, 0.5);
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.9);
-      box-shadow: 0 0 20px rgba(255, 136, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      color: #ff8800;
-      text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
-      animation: pulse 2s infinite;
-    }
-
-    .logo-text {
-      color: white;
-      font-size: 24px;
-      font-weight: bold;
-      text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: #000000;
+        background-image:
+        /* Glowing orb effect */ radial-gradient(
+            circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(255, 136, 0, 0.2) 0%,
+            rgba(255, 136, 0, 0.1) 20%,
+            transparent 40%
+          ),
+          /* Diagonal lines */
+            repeating-linear-gradient(
+              45deg,
+              rgba(255, 136, 0, 0.03) 0px,
+              rgba(255, 136, 0, 0.03) 1px,
+              transparent 1px,
+              transparent 10px
+            ),
+          /* Grid overlay */
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.02) 1px,
+              transparent 1px
+            ),
+          linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+          /* Subtle orange glow */
+            radial-gradient(
+              circle at 50% 50%,
+              rgba(255, 136, 0, 0.1),
+              rgba(0, 0, 0, 1) 100%
+            );
+        background-size: 100% 100%, 20px 20px, 50px 50px, 50px 50px, 100% 100%;
+        background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+        transition: background-position 0.3s ease;
+      }
+      canvas {
+        width: 100vw;
+        height: 100vh;
+        display: block;
       }
 
-      50% {
-        transform: scale(1.05);
+      /* Update the controls style to match the new theme */
+      #controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        padding: 38px;
+        border-radius: 8px;
+        color: white;
+        border: 1px solid rgba(255, 136, 0, 0.5);
+        box-shadow: 0 0 20px rgba(255, 136, 0, 0.2);
+        backdrop-filter: blur(10px);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
       }
 
-      100% {
-        transform: scale(1);
+      #controls.visible {
+        transform: translateX(0);
       }
-    }
-  </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-</head>
 
-<body>
-  <div class="logo-container">
-    <div class="logo">⚡</div>
-  </div>
-  <button id="toggleControls">Controls ⚙️</button>
-  <div id="controls">
-    <label>Speed: <input type="range" id="speed" min="0" max="5" step="1" value="1"></label><br>
-    <label>Arms: <input type="range" id="arms" min="5" max="14" step="1" value="6"></label><br>
-    <label>Color: <input type="color" id="color" value="#ff8800"></label>
-    <div class="effect-controls">
-      <label>Bloom: <input type="range" id="bloom" min="0" max="1.5" step="0.1" value="0.1"></label><br>
-      <label>Noise: <input type="range" id="noise" min="0" max="1" step="0.1" value="0.2"></label><br>
-      <label>Distortion: <input type="range" id="distortion" min="0" max="0.5" step="0.1" value="0.0"></label><br>
-      <label>Tilt: <input type="range" id="tilt" min="0" max="1" step="0.2" value="0.4"></label>
+      .effect-controls {
+        margin-top: 10px;
+        border-top: 1px solid rgba(255, 136, 0, 0.3);
+        padding-top: 10px;
+      }
+
+      #toggleControls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        border: 1px solid rgba(255, 136, 0, 0.5);
+        box-shadow: 0 0 10px rgba(255, 136, 0, 0.2);
+        backdrop-filter: blur(5px);
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        z-index: 1000;
+      }
+
+      #toggleControls:hover {
+        background: rgba(255, 136, 0, 0.3);
+      }
+
+      input[type="range"] {
+        accent-color: #ff8800;
+      }
+
+      /* Logo styles */
+      .logo-container {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        border: 2px solid rgba(255, 136, 0, 0.5);
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.9);
+        box-shadow: 0 0 20px rgba(255, 136, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #ff8800;
+        text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+        animation: pulse 2s infinite;
+      }
+
+      .logo-text {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.05);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  </head>
+
+  <body>
+    <div class="logo-container">
+      <div class="logo">⚡</div>
     </div>
-  </div>
-  <canvas id="glcanvas"></canvas>
-  <script type="x-shader/x-vertex" id="vertShader">
-varying vec2 vUv;
-varying vec3 vPosition;
+    <button id="toggleControls">Controls ⚙️</button>
+    <div id="controls">
+      <label
+        >Speed:
+        <input
+          type="range"
+          id="speed"
+          min="0"
+          max="5"
+          step="1"
+          value="1" /></label
+      ><br />
+      <label
+        >Arms:
+        <input
+          type="range"
+          id="arms"
+          min="5"
+          max="14"
+          step="1"
+          value="6" /></label
+      ><br />
+      <label>Color: <input type="color" id="color" value="#ff8800" /></label>
+      <div class="effect-controls">
+        <label
+          >Bloom:
+          <input
+            type="range"
+            id="bloom"
+            min="0"
+            max="1.5"
+            step="0.1"
+            value="0.1" /></label
+        ><br />
+        <label
+          >Noise:
+          <input
+            type="range"
+            id="noise"
+            min="0"
+            max="1"
+            step="0.1"
+            value="0.2" /></label
+        ><br />
+        <label
+          >Distortion:
+          <input
+            type="range"
+            id="distortion"
+            min="0"
+            max="0.5"
+            step="0.1"
+            value="0.0" /></label
+        ><br />
+        <label
+          >Tilt:
+          <input type="range" id="tilt" min="0" max="1" step="0.2" value="0.4"
+        /></label>
+      </div>
+    </div>
+    <canvas id="glcanvas"></canvas>
+    <script type="x-shader/x-vertex" id="vertShader">
+      varying vec2 vUv;
+      varying vec3 vPosition;
 
-void main() {
-    vUv = uv;
-    vPosition = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-</script>
-  <script type="x-shader/x-fragment" id="fragShader">
-precision highp float;
-uniform float u_time;
-uniform vec2 u_resolution;
-uniform vec2 u_mouse;
-uniform vec3 u_color;
-uniform float u_speed;
-uniform float u_arms;
-uniform float u_bloom;
-uniform float u_noise;
-uniform float u_distortion;
-uniform float u_depth;
-uniform float u_xRotation;
-uniform mat4 u_viewMatrix;
-
-#define PI 3.14159265359
-#define MAX_STEPS 100
-#define MAX_DIST 100.0
-#define SURF_DIST 0.01
-
-float noise(vec2 p) {
-  return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
-}
-
-float fbm(vec2 p) {
-    float sum = 0.0;
-    float amp = 1.0;
-    float freq = 1.0;
-    for(int i = 0; i < 4; i++) {
-        sum += amp * noise(p * freq);
-        freq *= 2.1;
-        amp *= 0.5;
-    }
-    return sum * 2.0 - 1.0;
-}
-
-float sdf_sphere(vec3 p, float r) {
-    return length(p) - r;
-}
-
-float map(vec3 p) {
-    float angle = atan(p.y, p.x);
-    float radius = length(p.xz);
-    float height = p.y;
-    
-    float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
-    spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
-    
-    float shape = length(p) - (1.5 + spiral * 0.4);
-    
-    vec3 fbmVal = vec3(
-        fbm(p.xy + vec2(u_time * 0.2)),
-        fbm(p.yz + vec2(u_time * 0.15)),
-        fbm(p.xz + vec2(u_time * 0.1))
-    );
-    
-    return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
-}
-
-vec3 getNormal(vec3 p) {
-    vec2 e = vec2(0.01, 0.0);
-    return normalize(vec3(
-        map(p + e.xyy) - map(p - e.xyy),
-        map(p + e.yxy) - map(p - e.yxy),
-        map(p + e.yyx) - map(p - e.yyx)
-    ));
-}
-
-float hash(float n) {
-    return fract(sin(n) * 43758.5453123);
-}
-
-float noise3D(vec3 x) {
-    vec3 p = floor(x);
-    vec3 f = fract(x);
-    f = f * f * (3.0 - 2.0 * f);
-    
-    float n = p.x + p.y * 157.0 + 113.0 * p.z;
-    return mix(
-        mix(mix(hash(n + 0.0), hash(n + 1.0), f.x),
-            mix(hash(n + 157.0), hash(n + 158.0), f.x), f.y),
-        mix(mix(hash(n + 113.0), hash(n + 114.0), f.x),
-            mix(hash(n + 270.0), hash(n + 271.0), f.x), f.y), f.z
-    );
-}
-
-float raymarch(vec3 ro, vec3 rd) {
-    float d0 = 0.0;
-    float glow = 0.0;
-    float noise = 0.0;
-    
-    for(int i = 0; i < MAX_STEPS; i++) {
-        vec3 p = ro + rd * d0;
-        
-        vec3 noisePos = p * 2.0 + u_time * 0.5;
-        float noiseVal = noise3D(noisePos) * u_noise;
-        p += noiseVal;
-        
-        float ds = map(p) * 0.7;
-        if(ds < SURF_DIST || d0 > MAX_DIST) break;
-        
-        float glowFactor = 1.0 / (1.0 + ds * ds * 8.0);
-        glow += glowFactor * u_bloom * 0.1;
-        noise += noiseVal * 0.5;
-        
-        d0 += ds;
-    }
-    
-    return d0;
-}
-
-void main() {
-    vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-    
-    vec3 ro = vec3(0.0, 0.0, 3.0);
-    vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));
-    
-    float c = cos(u_xRotation);
-    float s = sin(u_xRotation);
-    mat3 xRotMat = mat3(
-        1.0, 0.0, 0.0,
-        0.0, c, -s,
-        0.0, s, c
-    );
-    
-    ro = xRotMat * ro;
-    rd = xRotMat * rd;
-    
-    mat4 viewMatrix = inverse(u_viewMatrix);
-    ro = (viewMatrix * vec4(ro, 1.0)).xyz;
-    rd = (viewMatrix * vec4(rd, 0.0)).xyz;
-    
-    float d = raymarch(ro, rd);
-    vec3 p = ro + rd * d;
-    vec3 n = getNormal(p);
-    
-    vec3 color = u_color * 0.15;
-    
-    if(d < MAX_DIST) {
-        vec3 baseColor = u_color;
-        vec3 lightPos = vec3(2.0, 2.0, 4.0);
-        vec3 l = normalize(lightPos - p);
-        
-        float diff = max(dot(n, l), 0.0);
-        vec3 h = normalize(l - rd);
-        float spec = pow(max(dot(n, h), 0.0), 16.0);
-        float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);
-        
-        float density = 1.0 - smoothstep(0.0, 1.0, length(p));
-        float glow = exp(-2.0 * abs(map(p)));
-        
-        color += baseColor * (diff * 0.7 + 0.3);
-        color += vec3(1.0) * spec * 0.5;
-        color += baseColor * fresnel * 0.8;
-        color += baseColor * glow * density * (u_bloom * 3.0);
-        
-        float bloomIntensity = u_bloom * 2.0;
-        vec3 bloomColor = baseColor * glow * bloomIntensity;
-        color += bloomColor;
-        
-        float noiseEffect = noise3D(p + vec3(u_time * 0.2)) * u_noise;
-        color += baseColor * noiseEffect * 0.5;
-        
-        color *= exp(-d * 0.1);
-    }
-    
-    gl_FragColor = vec4(color, 1.0);
-}
-</script>
-  <script>
-    const canvas = document.getElementById("glcanvas");
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: true,
-      alpha: true
-    });
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 2);
-    camera.lookAt(0, 0, 0);
-
-    const orbitalCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    orbitalCamera.position.set(0.7, 0.7, -2);
-    orbitalCamera.lookAt(0, 0, 0);
-
-    const controls = new THREE.OrbitControls(orbitalCamera, canvas);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.screenSpacePanning = false;
-    controls.minDistance = 2.5;
-    controls.maxDistance = 5;
-    controls.rotateSpeed = 0.5;
-    controls.enableZoom = true;
-    controls.enablePan = false;
-    controls.target.set(0, 0, 0);
-    controls.update();
-
-    const shaderMaterial = new THREE.ShaderMaterial({
-      uniforms: {
-        u_time: { value: 0 },
-        u_resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-        u_mouse: { value: new THREE.Vector2() },
-        u_color: { value: new THREE.Vector3(1, 0.5, 0) },
-        u_speed: { value: 1.0 },
-        u_arms: { value: 6 },
-        u_bloom: { value: 0.1 },
-        u_noise: { value: 0.2 },
-        u_distortion: { value: 0.2 },
-        u_depth: { value: 1.0 },
-        u_xRotation: { value: 0.0 },
-        u_viewMatrix: { value: new THREE.Matrix4() },
-        u_planeMatrix: { value: new THREE.Matrix4() }
-      },
-      vertexShader: document.getElementById("vertShader").textContent,
-      fragmentShader: document.getElementById("fragShader").textContent,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-
-    const geometry = new THREE.PlaneGeometry(3, 2);
-    const mesh = new THREE.Mesh(geometry, shaderMaterial);
-    scene.add(mesh);
-
-    const createWireframe = (geometry, color, thickness) => {
-      const group = new THREE.Group();
-      const edges = new THREE.EdgesGeometry(geometry);
-
-      for (let i = 0; i < thickness; i++) {
-        const mat = new THREE.LineBasicMaterial({
-          color: color,
-          transparent: true,
-          opacity: 0.7
-        });
-        const wireframe = new THREE.LineSegments(edges, mat);
-        wireframe.position.z = i * 0.0005;
-        group.add(wireframe);
+      void main() {
+          vUv = uv;
+          vPosition = position;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
       }
-      return group;
-    };
+    </script>
+    <script type="x-shader/x-fragment" id="fragShader">
+      precision highp float;
+      uniform float u_time;
+      uniform vec2 u_resolution;
+      uniform vec2 u_mouse;
+      uniform vec3 u_color;
+      uniform float u_speed;
+      uniform float u_arms;
+      uniform float u_bloom;
+      uniform float u_noise;
+      uniform float u_distortion;
+      uniform float u_depth;
+      uniform float u_xRotation;
+      uniform mat4 u_viewMatrix;
 
-    const wireframe = createWireframe(geometry, 0xffffff, 10);
-    scene.add(wireframe);
+      #define PI 3.14159265359
+      #define MAX_STEPS 100
+      #define MAX_DIST 100.0
+      #define SURF_DIST 0.01
 
-    let mouseX = 0, mouseY = 0;
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseX = (e.clientX - rect.left) / rect.width;
-      mouseY = 1 - (e.clientY - rect.top) / rect.height;
+      float noise(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+      }
 
-      targetRotationX = (mouseY - 0.5) * tiltAmount;
-      targetRotationY = (mouseX - 0.5) * tiltAmount;
+      float fbm(vec2 p) {
+          float sum = 0.0;
+          float amp = 1.0;
+          float freq = 1.0;
+          for(int i = 0; i < 4; i++) {
+              sum += amp * noise(p * freq);
+              freq *= 2.1;
+              amp *= 0.5;
+          }
+          return sum * 2.0 - 1.0;
+      }
 
-      shaderMaterial.uniforms.u_mouse.value.set(mouseX * window.innerWidth, mouseY * window.innerHeight);
-    });
+      float sdf_sphere(vec3 p, float r) {
+          return length(p) - r;
+      }
 
-    document.addEventListener('mousemove', (e) => {
-      const x = (e.clientX / window.innerWidth) * 100;
-      const y = (e.clientY / window.innerHeight) * 100;
-      document.body.style.setProperty('--mouse-x', `${x}%`);
-      document.body.style.setProperty('--mouse-y', `${y}%`);
-    });
+      float map(vec3 p) {
+          float angle = atan(p.y, p.x);
+          float radius = length(p.xz);
+          float height = p.y;
 
-    function hexToRGB(hex) {
-      const r = parseInt(hex.slice(1, 3), 16) / 255;
-      const g = parseInt(hex.slice(3, 5), 16) / 255;
-      const b = parseInt(hex.slice(5, 7), 16) / 255;
-      return [r, g, b];
-    }
+          float spiral = sin(angle * u_arms + radius * 2.5 - u_time * u_speed) * 0.7;
+          spiral += cos(height * 3.0 + angle * 2.0 + u_time * u_speed * 0.3) * 0.5;
 
-    let speed = 1.5;
-    let arms = 6;
-    let color = hexToRGB('#ff8800');
-    let bloom = 0.1;
-    let noiseAmount = 0.2;
-    let distortion = 0.0;
+          float shape = length(p) - (1.5 + spiral * 0.4);
 
-    let tiltAmount = 0.4;
-    let targetRotationX = 0;
-    let targetRotationY = 0;
-    let currentRotationX = 0;
-    let currentRotationY = 0;
+          vec3 fbmVal = vec3(
+              fbm(p.xy + vec2(u_time * 0.2)),
+              fbm(p.yz + vec2(u_time * 0.15)),
+              fbm(p.xz + vec2(u_time * 0.1))
+          );
 
-    document.getElementById('speed').addEventListener('input', (e) => {
-      speed = parseFloat(e.target.value);
-    });
+          return shape + dot(fbmVal, vec3(0.4)) * u_distortion;
+      }
 
-    document.getElementById('arms').addEventListener('input', (e) => {
-      arms = parseFloat(e.target.value);
-    });
+      vec3 getNormal(vec3 p) {
+          vec2 e = vec2(0.01, 0.0);
+          return normalize(vec3(
+              map(p + e.xyy) - map(p - e.xyy),
+              map(p + e.yxy) - map(p - e.yxy),
+              map(p + e.yyx) - map(p - e.yyx)
+          ));
+      }
 
-    document.getElementById('color').addEventListener('input', (e) => {
-      color = hexToRGB(e.target.value);
-    });
+      float hash(float n) {
+          return fract(sin(n) * 43758.5453123);
+      }
 
-    document.getElementById('bloom').addEventListener('input', (e) => {
-      bloom = parseFloat(e.target.value);
-    });
+      float noise3D(vec3 x) {
+          vec3 p = floor(x);
+          vec3 f = fract(x);
+          f = f * f * (3.0 - 2.0 * f);
 
-    document.getElementById('noise').addEventListener('input', (e) => {
-      noiseAmount = parseFloat(e.target.value);
-    });
+          float n = p.x + p.y * 157.0 + 113.0 * p.z;
+          return mix(
+              mix(mix(hash(n + 0.0), hash(n + 1.0), f.x),
+                  mix(hash(n + 157.0), hash(n + 158.0), f.x), f.y),
+              mix(mix(hash(n + 113.0), hash(n + 114.0), f.x),
+                  mix(hash(n + 270.0), hash(n + 271.0), f.x), f.y), f.z
+          );
+      }
 
-    document.getElementById('distortion').addEventListener('input', (e) => {
-      distortion = parseFloat(e.target.value);
-    });
+      float raymarch(vec3 ro, vec3 rd) {
+          float d0 = 0.0;
+          float glow = 0.0;
+          float noise = 0.0;
 
-    document.getElementById('tilt').addEventListener('input', (e) => {
-      tiltAmount = parseFloat(e.target.value);
-    });
+          for(int i = 0; i < MAX_STEPS; i++) {
+              vec3 p = ro + rd * d0;
 
-    function render(t) {
-      const time = t * 0.001;
+              vec3 noisePos = p * 2.0 + u_time * 0.5;
+              float noiseVal = noise3D(noisePos) * u_noise;
+              p += noiseVal;
+
+              float ds = map(p) * 0.7;
+              if(ds < SURF_DIST || d0 > MAX_DIST) break;
+
+              float glowFactor = 1.0 / (1.0 + ds * ds * 8.0);
+              glow += glowFactor * u_bloom * 0.1;
+              noise += noiseVal * 0.5;
+
+              d0 += ds;
+          }
+
+          return d0;
+      }
+
+      void main() {
+          vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+
+          vec3 ro = vec3(0.0, 0.0, 3.0);
+          vec3 rd = normalize(vec3(uv.x, uv.y, -1.0));
+
+          float c = cos(u_xRotation);
+          float s = sin(u_xRotation);
+          mat3 xRotMat = mat3(
+              1.0, 0.0, 0.0,
+              0.0, c, -s,
+              0.0, s, c
+          );
+
+          ro = xRotMat * ro;
+          rd = xRotMat * rd;
+
+          mat4 viewMatrix = inverse(u_viewMatrix);
+          ro = (viewMatrix * vec4(ro, 1.0)).xyz;
+          rd = (viewMatrix * vec4(rd, 0.0)).xyz;
+
+          float d = raymarch(ro, rd);
+          vec3 p = ro + rd * d;
+          vec3 n = getNormal(p);
+
+          vec3 color = u_color * 0.15;
+
+          if(d < MAX_DIST) {
+              vec3 baseColor = u_color;
+              vec3 lightPos = vec3(2.0, 2.0, 4.0);
+              vec3 l = normalize(lightPos - p);
+
+              float diff = max(dot(n, l), 0.0);
+              vec3 h = normalize(l - rd);
+              float spec = pow(max(dot(n, h), 0.0), 16.0);
+              float fresnel = pow(1.0 - max(dot(n, -rd), 0.0), 2.0);
+
+              float density = 1.0 - smoothstep(0.0, 1.0, length(p));
+              float glow = exp(-2.0 * abs(map(p)));
+
+              color += baseColor * (diff * 0.7 + 0.3);
+              color += vec3(1.0) * spec * 0.5;
+              color += baseColor * fresnel * 0.8;
+              color += baseColor * glow * density * (u_bloom * 3.0);
+
+              float bloomIntensity = u_bloom * 2.0;
+              vec3 bloomColor = baseColor * glow * bloomIntensity;
+              color += bloomColor;
+
+              float noiseEffect = noise3D(p + vec3(u_time * 0.2)) * u_noise;
+              color += baseColor * noiseEffect * 0.5;
+
+              color *= exp(-d * 0.1);
+          }
+
+          gl_FragColor = vec4(color, 1.0);
+      }
+    </script>
+    <script>
+      const canvas = document.getElementById("glcanvas");
+      const renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: true,
+        alpha: true,
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.set(0, 0, 2);
+      camera.lookAt(0, 0, 0);
+
+      const orbitalCamera = new THREE.PerspectiveCamera(
+        60,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      orbitalCamera.position.set(0.7, 0.7, -2);
+      orbitalCamera.lookAt(0, 0, 0);
+
+      const controls = new THREE.OrbitControls(orbitalCamera, canvas);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.screenSpacePanning = false;
+      controls.minDistance = 2.5;
+      controls.maxDistance = 5;
+      controls.rotateSpeed = 0.5;
+      controls.enableZoom = true;
+      controls.enablePan = false;
+      controls.target.set(0, 0, 0);
       controls.update();
 
-      mesh.rotation.y = time * 0.5;
-      wireframe.rotation.y = mesh.rotation.y;
+      const shaderMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          u_time: { value: 0 },
+          u_resolution: {
+            value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+          },
+          u_mouse: { value: new THREE.Vector2() },
+          u_color: { value: new THREE.Vector3(1, 0.5, 0) },
+          u_speed: { value: 1.0 },
+          u_arms: { value: 6 },
+          u_bloom: { value: 0.1 },
+          u_noise: { value: 0.2 },
+          u_distortion: { value: 0.2 },
+          u_depth: { value: 1.0 },
+          u_xRotation: { value: 0.0 },
+          u_viewMatrix: { value: new THREE.Matrix4() },
+          u_planeMatrix: { value: new THREE.Matrix4() },
+        },
+        vertexShader: document.getElementById("vertShader").textContent,
+        fragmentShader: document.getElementById("fragShader").textContent,
+        transparent: true,
+        side: THREE.DoubleSide,
+      });
 
-      const xRotation = Math.sin(time * 0.5) * 0.2;
-      mesh.material.uniforms.u_xRotation.value = xRotation;
+      const geometry = new THREE.PlaneGeometry(3, 2);
+      const mesh = new THREE.Mesh(geometry, shaderMaterial);
+      scene.add(mesh);
 
-      currentRotationX += (targetRotationX - currentRotationX) * 0.1;
-      currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+      const createWireframe = (geometry, color, thickness) => {
+        const group = new THREE.Group();
+        const edges = new THREE.EdgesGeometry(geometry);
 
-      mesh.rotation.x = currentRotationX;
-      mesh.rotation.y = currentRotationY;
+        for (let i = 0; i < thickness; i++) {
+          const mat = new THREE.LineBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: 0.7,
+          });
+          const wireframe = new THREE.LineSegments(edges, mat);
+          wireframe.position.z = i * 0.0005;
+          group.add(wireframe);
+        }
+        return group;
+      };
 
-      wireframe.rotation.copy(mesh.rotation);
+      const wireframe = createWireframe(geometry, 0xffffff, 10);
+      scene.add(wireframe);
 
-      orbitalCamera.updateMatrixWorld();
-      camera.updateMatrixWorld();
+      let mouseX = 0,
+        mouseY = 0;
+      canvas.addEventListener("mousemove", (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left) / rect.width;
+        mouseY = 1 - (e.clientY - rect.top) / rect.height;
 
-      mesh.material.uniforms.u_time.value = time;
-      mesh.material.uniforms.u_resolution.value.set(window.innerWidth, window.innerHeight);
-      mesh.material.uniforms.u_speed.value = speed;
-      mesh.material.uniforms.u_arms.value = arms;
-      mesh.material.uniforms.u_color.value.set(color[0], color[1], color[2]);
-      mesh.material.uniforms.u_bloom.value = bloom;
-      mesh.material.uniforms.u_noise.value = noiseAmount;
-      mesh.material.uniforms.u_distortion.value = distortion;
-      mesh.material.uniforms.u_viewMatrix.value.copy(orbitalCamera.matrixWorld);
-      mesh.material.uniforms.u_planeMatrix.value.copy(camera.matrixWorld);
+        targetRotationX = (mouseY - 0.5) * tiltAmount;
+        targetRotationY = (mouseX - 0.5) * tiltAmount;
 
-      renderer.render(scene, camera);
-      requestAnimationFrame(render);
-    }
+        shaderMaterial.uniforms.u_mouse.value.set(
+          mouseX * window.innerWidth,
+          mouseY * window.innerHeight
+        );
+      });
 
-    window.addEventListener('resize', () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-      orbitalCamera.aspect = width / height;
-      orbitalCamera.updateProjectionMatrix();
-      renderer.setSize(width, height);
-      shaderMaterial.uniforms.u_resolution.value.set(width, height);
-    });
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.setProperty("--mouse-x", `${x}%`);
+        document.body.style.setProperty("--mouse-y", `${y}%`);
+      });
 
-    const toggleControls = document.getElementById('toggleControls');
-    const controlsPanel = document.getElementById('controls');
+      function hexToRGB(hex) {
+        const r = parseInt(hex.slice(1, 3), 16) / 255;
+        const g = parseInt(hex.slice(3, 5), 16) / 255;
+        const b = parseInt(hex.slice(5, 7), 16) / 255;
+        return [r, g, b];
+      }
 
-    toggleControls.addEventListener('click', () => {
-      controlsPanel.classList.toggle('visible');
-    });
+      let speed = 1.5;
+      let arms = 6;
+      let color = hexToRGB("#ff8800");
+      let bloom = 0.1;
+      let noiseAmount = 0.2;
+      let distortion = 0.0;
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    render(0);
-  </script>
-</body>
+      let tiltAmount = 0.4;
+      let targetRotationX = 0;
+      let targetRotationY = 0;
+      let currentRotationX = 0;
+      let currentRotationY = 0;
 
+      document.getElementById("speed").addEventListener("input", (e) => {
+        speed = parseFloat(e.target.value);
+      });
+
+      document.getElementById("arms").addEventListener("input", (e) => {
+        arms = parseFloat(e.target.value);
+      });
+
+      document.getElementById("color").addEventListener("input", (e) => {
+        color = hexToRGB(e.target.value);
+      });
+
+      document.getElementById("bloom").addEventListener("input", (e) => {
+        bloom = parseFloat(e.target.value);
+      });
+
+      document.getElementById("noise").addEventListener("input", (e) => {
+        noiseAmount = parseFloat(e.target.value);
+      });
+
+      document.getElementById("distortion").addEventListener("input", (e) => {
+        distortion = parseFloat(e.target.value);
+      });
+
+      document.getElementById("tilt").addEventListener("input", (e) => {
+        tiltAmount = parseFloat(e.target.value);
+      });
+
+      function render(t) {
+        const time = t * 0.001;
+        controls.update();
+
+        mesh.rotation.y = time * 0.5;
+        wireframe.rotation.y = mesh.rotation.y;
+
+        const xRotation = Math.sin(time * 0.5) * 0.2;
+        mesh.material.uniforms.u_xRotation.value = xRotation;
+
+        currentRotationX += (targetRotationX - currentRotationX) * 0.1;
+        currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+
+        mesh.rotation.x = currentRotationX;
+        mesh.rotation.y = currentRotationY;
+
+        wireframe.rotation.copy(mesh.rotation);
+
+        orbitalCamera.updateMatrixWorld();
+        camera.updateMatrixWorld();
+
+        mesh.material.uniforms.u_time.value = time;
+        mesh.material.uniforms.u_resolution.value.set(
+          window.innerWidth,
+          window.innerHeight
+        );
+        mesh.material.uniforms.u_speed.value = speed;
+        mesh.material.uniforms.u_arms.value = arms;
+        mesh.material.uniforms.u_color.value.set(color[0], color[1], color[2]);
+        mesh.material.uniforms.u_bloom.value = bloom;
+        mesh.material.uniforms.u_noise.value = noiseAmount;
+        mesh.material.uniforms.u_distortion.value = distortion;
+        mesh.material.uniforms.u_viewMatrix.value.copy(
+          orbitalCamera.matrixWorld
+        );
+        mesh.material.uniforms.u_planeMatrix.value.copy(camera.matrixWorld);
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+
+      window.addEventListener("resize", () => {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        orbitalCamera.aspect = width / height;
+        orbitalCamera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+        shaderMaterial.uniforms.u_resolution.value.set(width, height);
+      });
+
+      const toggleControls = document.getElementById("toggleControls");
+      const controlsPanel = document.getElementById("controls");
+
+      toggleControls.addEventListener("click", () => {
+        controlsPanel.classList.toggle("visible");
+      });
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      render(0);
+    </script>
+  </body>
 </html>
